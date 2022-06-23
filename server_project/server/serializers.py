@@ -27,7 +27,7 @@ class ProjectChiefSerializer(serializers.ModelSerializer):
 
 class ProgarmChiefSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProgarmChief
+        model = ProgramChief
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -141,4 +141,5 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
         instance.save()
 
-        return instance
+        return instance
+

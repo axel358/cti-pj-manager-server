@@ -1,9 +1,23 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class Document(models.Model):
+
+class ProjectChief(User):
     name = models.TextField()
-    path = models.TextField()
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+
+class ProgramChief(User):
+    name = models.TextField()
+
+
+class Program(models.Model):
+    name = models.TextField
+    chief = models.OneToOneField(ProgramChief, on_delete=models.CASCADE)
+
+
+class ttt(models.Model):
+    name = models.TextField
+    chief = models.OneToOneField(ProgramChief, on_delete=models.CASCADE)
 
 
 class Project(models.Model):
@@ -18,13 +32,7 @@ class Project(models.Model):
     chief = models.ForeignKey(ProjectChief, on_delete=models.CASCADE)
 
 
-class Program(models.Model):
-    name = models.TextField;
-    chief = models.OneToOneField(ProgramChief, on_delete=models.CASCADE)
-
-
-class ProjectChief(models.User):
+class Document(models.Model):
     name = models.TextField()
-    
-class ProgramChief(models.User):
-    name = models.TextField()
+    path = models.TextField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)

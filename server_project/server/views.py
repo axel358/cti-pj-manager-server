@@ -1,5 +1,4 @@
 from rest_framework.permissions import AllowAny
-from django.contrib.auth.models import User
 
 from .serializers import *
 from rest_framework import generics
@@ -54,4 +53,5 @@ class LogoutAllView(APIView):
         for token in tokens:
             t, _ = BlacklistedToken.objects.get_or_create(token=token)
 
-        return Response(status=status.HTTP_205_RESET_CONTENT)
+        return Response(status=status.HTTP_205_RESET_CONTENT)
+
