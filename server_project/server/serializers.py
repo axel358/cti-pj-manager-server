@@ -20,14 +20,9 @@ class ProgramSerializer(serializers.ModelSerializer):
         model = Program
 
 
-class ProjectChiefSerializer(serializers.ModelSerializer):
+class Chief(serializers.ModelSerializer):
     class Meta:
-        model = ProjectChief
-        
-
-class ProgarmChiefSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProgramChief
+        model = Chief
 
 
 class RegisterSerializer(serializers.ModelSerializer):
