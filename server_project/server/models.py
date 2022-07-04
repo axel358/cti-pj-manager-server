@@ -20,13 +20,17 @@ class Program(models.Model):
 
 
 class Project(models.Model):
+    PROJECTS_TYPES=[
+        ('pap', 'Proyectos Asociados a Programas'),
+        ('pnap', 'Proyectos No Asociados a Programas')
+    ]
     name = models.TextField()
     main_entity = models.TextField()
     entities = models.TextField()
     faculty = models.TextField()
     pj_id = models.TextField()
     program = models.TextField()
-    pj_type = models.TextField()
+    pj_type = models.TextField(max_length=255, choices=PROJECTS_TYPES, default='pap')
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='projects')
     chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='projects')
 
