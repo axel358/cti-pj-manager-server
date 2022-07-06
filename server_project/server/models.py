@@ -7,7 +7,7 @@ class Chief(User):
     name = models.TextField()
     is_program_chief = models.BooleanField()
 
-    class Meta():
+    class Meta:
         verbose_name = 'Chief'
 
 

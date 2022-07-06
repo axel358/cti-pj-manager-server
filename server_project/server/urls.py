@@ -22,4 +22,5 @@ urlpatterns = [
         name="auth_update_profile",
     ),
     path("logout/", LogoutAllView.as_view(), name="user_logout"),
+
 ]

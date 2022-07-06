@@ -1,6 +1,7 @@
 from rest_framework.permissions import AllowAny
 
 from .serializers import *
+from .models import *
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.views import APIView
@@ -54,4 +55,3 @@ class LogoutAllView(APIView):
             t, _ = BlacklistedToken.objects.get_or_create(token=token)
 
         return Response(status=status.HTTP_205_RESET_CONTENT)
-

@@ -1,28 +1,35 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from .models import *
 
 
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-
-
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
+        fields = '__all__'
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    document_ls = DocumentSerializer(
+        source="project", read_only=True, )
+
+    class Meta:
+        model = Project
+        fields = ['name', 'documents', 'document_ls']
+        depth = 1
 
 
 class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
+        fields = '__all__'
 
 
 class Chief(serializers.ModelSerializer):
     class Meta:
         model = Chief
+        fields = '__all__'
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -137,4 +144,3 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
