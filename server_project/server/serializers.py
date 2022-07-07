@@ -1,3 +1,4 @@
+from django.urls import reverse_lazy
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
@@ -10,16 +11,6 @@ class DocumentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProjectSerializer(serializers.ModelSerializer):
-    document_ls = DocumentSerializer(
-        source="project", read_only=True, )
-
-    class Meta:
-        model = Project
-        fields = ['name', 'documents', 'document_ls']
-        depth = 1
-
-
 class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
@@ -30,6 +21,17 @@ class Chief(serializers.ModelSerializer):
     class Meta:
         model = Chief
         fields = '__all__'
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    document_ls = DocumentSerializer(
+        source="project", read_only=True, many=True, )
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'main_entity', 'entities', 'faculty', 'pj_id', 'pj_type', 'program', 'chief',
+                  'documents', 'document_ls', ]
+        depth = 1
 
 
 class RegisterSerializer(serializers.ModelSerializer):

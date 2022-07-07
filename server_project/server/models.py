@@ -29,9 +29,8 @@ class Project(models.Model):
     entities = models.TextField()
     faculty = models.TextField()
     pj_id = models.TextField()
-    program = models.TextField()
     pj_type = models.TextField(max_length=255, choices=PROJECTS_TYPES, default='pap')
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='projects')
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='program')
     chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='projects')
 
     def __str__(self):

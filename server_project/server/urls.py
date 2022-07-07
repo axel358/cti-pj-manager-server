@@ -3,7 +3,7 @@ from .views import (
     RegisterView,
     ChangePasswordView,
     UpdateProfileView,
-    LogoutAllView,
+    LogoutAllView, ProjectList, ProjectCreate, ProjectUpdate,ProjectDelete
 )
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
@@ -22,5 +22,9 @@ urlpatterns = [
         name="auth_update_profile",
     ),
     path("logout/", LogoutAllView.as_view(), name="user_logout"),
+    path("projects/all/", ProjectList.as_view(), name="project_list"),
+    path("projects/create/", ProjectCreate.as_view(), name="project_create"),
+    path("projects/update/<int:pk>", ProjectUpdate.as_view(), name="project_update"),
+    path("projects/delete/<int:pk>", ProjectDelete.as_view(), name="project_delete"),
 
 ]
