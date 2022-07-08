@@ -11,6 +11,15 @@ class Chief(User):
         verbose_name = 'Chief'
 
 
+class Member(models.Model):
+    full_name = models.TextField()
+    email = models.EmailField(max_length=254, )
+    c_id = models.TextField(max_length=11)
+
+    def __str__(self):
+        return self.full_name
+
+
 class Program(models.Model):
     name = models.TextField(default='')
     chief = models.OneToOneField(Chief, on_delete=models.CASCADE, related_name='program')
@@ -20,7 +29,7 @@ class Program(models.Model):
 
 
 class Project(models.Model):
-    PROJECTS_TYPES=[
+    PROJECTS_TYPES = [
         ('pap', 'Proyectos Asociados a Programas'),
         ('pnap', 'Proyectos No Asociados a Programas')
     ]
@@ -31,7 +40,7 @@ class Project(models.Model):
     pj_id = models.TextField()
     pj_type = models.TextField(max_length=255, choices=PROJECTS_TYPES, default='pap')
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='program')
-    chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='projects')
+    chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='pro_chief')
 
     def __str__(self):
         return self.name
@@ -48,6 +57,3 @@ class Document(models.Model):
 
     def __str__(self):
         return self.name
-
-
-

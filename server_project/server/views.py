@@ -14,24 +14,19 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-class ProjectList(generics.ListAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-
-
-class ProjectCreate(generics.CreateAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-
-
-class ProjectUpdate(generics.RetrieveUpdateAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-
-
-class ProjectDelete(generics.DestroyAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
+# class ProjectCreate(generics.CreateAPIView):
+#     queryset = Project.objects.all()
+#     serializer_class = ProjectSerializer
+#
+#
+# class ProjectUpdate(generics.RetrieveUpdateAPIView):
+#     queryset = Project.objects.all()
+#     serializer_class = ProjectSerializer
+#
+#
+# class ProjectDelete(generics.DestroyAPIView):
+#     queryset = Project.objects.all()
+#     serializer_class = ProjectSerializer
 
 
 class RegisterView(generics.CreateAPIView):

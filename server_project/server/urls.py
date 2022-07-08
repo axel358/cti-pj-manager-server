@@ -1,13 +1,24 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+
 from .views import (
     RegisterView,
     ChangePasswordView,
     UpdateProfileView,
-    LogoutAllView, ProjectList, ProjectCreate, ProjectUpdate,ProjectDelete
+    LogoutAllView,
 )
+from .viewsets import ProgramViewSet, ProjectViewSet, ChiefViewSet, MembersViewSet
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
+router = routers.DefaultRouter()
+router.register(r"projects", ProjectViewSet)
+router.register(r"programs", ProgramViewSet)
+router.register(r"chief", ChiefViewSet)
+router.register(r"members", MembersViewSet)
+app_name = "server"
+
 urlpatterns = [
+    path("", include(router.urls)),
     path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("login/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("register/", RegisterView.as_view(), name="user_register"),
@@ -22,9 +33,5 @@ urlpatterns = [
         name="auth_update_profile",
     ),
     path("logout/", LogoutAllView.as_view(), name="user_logout"),
-    path("projects/all/", ProjectList.as_view(), name="project_list"),
-    path("projects/create/", ProjectCreate.as_view(), name="project_create"),
-    path("projects/update/<int:pk>", ProjectUpdate.as_view(), name="project_update"),
-    path("projects/delete/<int:pk>", ProjectDelete.as_view(), name="project_delete"),
 
 ]

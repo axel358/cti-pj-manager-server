@@ -5,6 +5,12 @@ from django.contrib.auth.password_validation import validate_password
 from .models import *
 
 
+class MembersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = '__all__'
+
+
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
@@ -17,7 +23,7 @@ class ProgramSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class Chief(serializers.ModelSerializer):
+class ChiefSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chief
         fields = '__all__'
