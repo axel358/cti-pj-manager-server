@@ -50,13 +50,13 @@ class Project(models.Model):
 
 
 class Member(models.Model):
-    full_name = models.TextField()
+    name = models.TextField()
     email = models.EmailField(max_length=254)
     c_id = models.TextField(max_length=11)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='members')
 
     def __str__(self):
-        return self.full_name
+        return self.name
 
 
 class Document(models.Model):

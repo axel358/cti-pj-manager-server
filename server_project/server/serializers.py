@@ -31,10 +31,11 @@ class ChiefSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     documents = DocumentSerializer(read_only=True, many=True)
+    members = MembersSerializer(read_only=True, many=True)
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'main_entity', 'entities', 'faculty', 'pj_id', 'pj_type', 'program', 'chief', 'documents', )
+        fields = ('id', 'name', 'main_entity', 'entities', 'faculty', 'pj_id', 'pj_type', 'program', 'chief', 'documents', 'members', )
         #depth = 1
 
 
