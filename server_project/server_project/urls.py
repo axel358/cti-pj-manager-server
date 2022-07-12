@@ -10,7 +10,7 @@ router = DefaultRouter()
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("server/", include("server.urls")),
+    path("api/", include("server.urls")),
 ]
 
 if settings.DEBUG:

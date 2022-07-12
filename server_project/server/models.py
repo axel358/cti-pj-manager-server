@@ -12,8 +12,20 @@ class Chief(User):
 
 
 class Program(models.Model):
-    name = models.TextField(default='')
+    name = models.TextField()
     chief = models.OneToOneField(Chief, on_delete=models.CASCADE, related_name='program')
+    priority = models.TextField()
+    reason = models.TextField()
+    general_goals = models.TextField()
+    specific_goals = models.TextField()
+    main_results = models.TextField()
+    indicators = models.TextField()
+    expected_results = models.TextField()
+    entities = models.TextField()
+    infrastructure = models.TextField()
+    main_entity = models.TextField()
+    secretary = models.TextField()
+    experts_group = models.TextField()
 
     def __str__(self):
         return self.name
