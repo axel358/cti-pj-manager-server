@@ -30,14 +30,12 @@ class ChiefSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    document_ls = DocumentSerializer(
-        source="project", read_only=True, many=True, )
+    documents = DocumentSerializer(read_only=True, many=True)
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'main_entity', 'entities', 'faculty', 'pj_id', 'pj_type', 'program', 'chief',
-                  'documents', 'document_ls', ]
-        depth = 1
+        fields = ('id', 'name', 'main_entity', 'entities', 'faculty', 'pj_id', 'pj_type', 'program', 'chief', 'documents', )
+        #depth = 1
 
 
 class RegisterSerializer(serializers.ModelSerializer):

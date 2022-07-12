@@ -11,15 +11,6 @@ class Chief(User):
         verbose_name = 'Chief'
 
 
-class Member(models.Model):
-    full_name = models.TextField()
-    email = models.EmailField(max_length=254, )
-    c_id = models.TextField(max_length=11)
-
-    def __str__(self):
-        return self.full_name
-
-
 class Program(models.Model):
     name = models.TextField(default='')
     chief = models.OneToOneField(Chief, on_delete=models.CASCADE, related_name='program')
@@ -39,11 +30,21 @@ class Project(models.Model):
     faculty = models.TextField()
     pj_id = models.TextField()
     pj_type = models.TextField(max_length=255, choices=PROJECTS_TYPES, default='pap')
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='program')
-    chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='pro_chief')
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='projects')
+    chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='projects')
 
     def __str__(self):
         return self.name
+
+
+class Member(models.Model):
+    full_name = models.TextField()
+    email = models.EmailField(max_length=254)
+    c_id = models.TextField(max_length=11)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='members')
+
+    def __str__(self):
+        return self.full_name
 
 
 class Document(models.Model):

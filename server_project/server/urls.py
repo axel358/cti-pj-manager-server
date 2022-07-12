@@ -7,7 +7,7 @@ from .views import (
     UpdateProfileView,
     LogoutAllView,
 )
-from .viewsets import ProgramViewSet, ProjectViewSet, ChiefViewSet, MembersViewSet
+from .viewsets import ProgramViewSet, ProjectViewSet, ChiefViewSet, MembersViewSet, DocumentViewSet
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 router = routers.DefaultRouter()
@@ -15,6 +15,7 @@ router.register(r"projects", ProjectViewSet)
 router.register(r"programs", ProgramViewSet)
 router.register(r"chief", ChiefViewSet)
 router.register(r"members", MembersViewSet)
+router.register(r"documents", DocumentViewSet)
 app_name = "server"
 
 urlpatterns = [
