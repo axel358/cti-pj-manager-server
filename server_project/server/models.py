@@ -42,7 +42,7 @@ class Project(models.Model):
     faculty = models.TextField()
     pj_id = models.TextField()
     pj_type = models.TextField(max_length=255, choices=PROJECTS_TYPES, default='pap')
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='projects')
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='projects', null=True, blank=True)
     chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='projects')
 
     def __str__(self):
