@@ -35,6 +35,9 @@ class Program(models.Model):
     experts_group = models.TextField(null=True, blank=True)
     start_date = models.CharField(max_length=255, null=True, blank=True)
     end_date = models.CharField(max_length=255, null=True, blank=True)
+    pj_amount = models.IntegerField(null=True, blank=True)
+    money = models.IntegerField(null=True, blank=True)
+    user_clients = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -45,8 +48,8 @@ class ProgramDocument(models.Model):
     def get_upload_folder(self, filename):
         return os.path.join(self.program.name, filename)
 
-    name = models.TextField()
-    file = models.FileField(upload_to=get_upload_folder, null=True)
+    name = models.CharField(max_length=255)
+    file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='documents', null=True)
 
     def __str__(self):
