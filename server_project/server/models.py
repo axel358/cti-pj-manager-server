@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 
-
 class Chief(User):
     name = models.TextField()
     is_program_chief = models.BooleanField()
@@ -20,6 +19,7 @@ class Program(models.Model):
                      ('sec', 'Sectorial'),
                      ('ter', 'Territorial')]
     name = models.CharField(max_length=512)
+    program_code = models.CharField(max_length=10, default="0")
     chief = models.OneToOneField(Chief,
                                  on_delete=models.CASCADE,
                                  related_name='program',
@@ -37,11 +37,19 @@ class Program(models.Model):
     main_entity = models.TextField(null=True, blank=True)
     secretary = models.TextField(null=True, blank=True)
     experts_group = models.TextField(null=True, blank=True)
-    start_date = models.CharField(max_length=255, null=True, blank=True)
-    end_date = models.CharField(max_length=255, null=True, blank=True)
+    start_date = models.DateField(default=timezone.now)
+    end_date = models.DateField(default=timezone.now)
     pj_amount = models.IntegerField(null=True, blank=True)
-    money = models.IntegerField(null=True, blank=True)
+    money = models.BigIntegerField(null=True, blank=True)
     user_clients = models.TextField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(Program, self).save(*args, **kwargs)
+
+    def clean_fields(self, exclude=None):
+        if self.end_date < self.start_date:
+            raise ValidationError('The start date must be less than the end date.')
 
     def __str__(self):
         return self.name
