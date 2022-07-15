@@ -1,6 +1,7 @@
 import os
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Chief(User):
@@ -57,24 +58,31 @@ class ProgramDocument(models.Model):
 
 
 class Project(models.Model):
-    PROJECTS_TYPES = [('pap', 'Proyectos Asociados a Programas'),
-                      ('pnap', 'Proyectos No Asociados a Programas')]
+    PROJECTS_TYPES = [
+        ('papn', 'Proyectos Asociados a Programas Nacional'),
+        ('paps', 'Proyectos Asociados a Programas Sectorial'),
+        ('papt', 'Proyectos Asociados a Programas Territorial'),
+        ('pnap_di', 'Proyectos No Asociados a Programas Demanda Interna'),
+        ('pnap_de', 'Proyectos No Asociados a Programas Demanda Externa')
+
+    ]
+    PROJECTS_CLASS_OPTIONS = [
+        ('i_bas', 'De Investigación Básica'),
+        ('i_d', 'Aplicada y de Desarrollo'),
+        ('inn', 'Innovación')
+    ]
     name = models.TextField()
+    project_code = models.CharField(max_length=10, default="0")
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='projects', null=True, blank=True)
+    program_code = models.CharField(max_length=10, default="0")
+    project_classification = models.TextField(max_length=255, choices=PROJECTS_CLASS_OPTIONS, default='i_bas')
+    pj_type = models.TextField(max_length=255, choices=PROJECTS_TYPES, default='papt')
     main_entity = models.TextField()
     entities = models.TextField()
-    faculty = models.TextField()
-    pj_id = models.TextField()
-    pj_type = models.TextField(max_length=255,
-                               choices=PROJECTS_TYPES,
-                               default='pap')
-    program = models.ForeignKey(Program,
-                                on_delete=models.CASCADE,
-                                related_name='projects',
-                                null=True,
-                                blank=True)
-    chief = models.ForeignKey(Chief,
-                              on_delete=models.CASCADE,
-                              related_name='projects')
+    chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='projects')
+    start_date = models.DateField(default=timezone.now)
+    end_date = models.DateField(default=timezone.now)
+    financing = models.PositiveBigIntegerField(default=0)
 
     def __str__(self):
         return self.name
