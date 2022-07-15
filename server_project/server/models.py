@@ -18,22 +18,23 @@ class Program(models.Model):
     name = models.CharField(max_length=512)
     chief = models.OneToOneField(Chief,
                                  on_delete=models.CASCADE,
-                                 related_name='program')
-    priority = models.TextField(null=True)
-    reason = models.TextField()
+                                 related_name='program',
+                                 null=True, blank=True)
+    priority = models.TextField(null=True, blank=True)
+    reason = models.TextField(null=True, blank=True)
     ptype = models.TextField(choices=PROGRAM_TYPES, default='nac')
-    general_goals = models.TextField()
-    specific_goals = models.TextField()
-    main_results = models.TextField()
-    indicators = models.TextField()
-    expected_results = models.TextField()
-    entities = models.TextField()
-    infrastructure = models.TextField()
-    main_entity = models.TextField()
-    secretary = models.TextField()
-    experts_group = models.TextField()
-    start_date = models.CharField(max_length=255)
-    end_date = models.CharField(max_length=255)
+    general_goals = models.TextField(null=True, blank=True)
+    specific_goals = models.TextField(null=True, blank=True)
+    main_results = models.TextField(null=True, blank=True)
+    indicators = models.TextField(null=True, blank=True)
+    expected_results = models.TextField(null=True, blank=True)
+    entities = models.TextField(null=True, blank=True)
+    infrastructure = models.TextField(null=True, blank=True)
+    main_entity = models.TextField(null=True, blank=True)
+    secretary = models.TextField(null=True, blank=True)
+    experts_group = models.TextField(null=True, blank=True)
+    start_date = models.CharField(max_length=255, null=True, blank=True)
+    end_date = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.name
