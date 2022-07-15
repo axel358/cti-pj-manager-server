@@ -1,7 +1,10 @@
 import os
+
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+
 
 
 class Chief(User):
@@ -83,6 +86,14 @@ class Project(models.Model):
     start_date = models.DateField(default=timezone.now)
     end_date = models.DateField(default=timezone.now)
     financing = models.PositiveBigIntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(Project, self).save(*args, **kwargs)
+
+    def clean_fields(self, exclude=None):
+        if self.end_date < self.start_date:
+            raise ValidationError('The start date must be less than the end date.')
 
     def __str__(self):
         return self.name

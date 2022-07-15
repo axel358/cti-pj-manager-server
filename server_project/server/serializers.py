@@ -43,8 +43,11 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'main_entity', 'entities', 'faculty', 'pj_id', 'pj_type', 'program', 'chief', 'documents', 'members', )
-        #depth = 1
+        fields = (
+            'id', 'name', 'project_code', 'program', 'program_code', 'project_classification', 'pj_type',
+            'main_entity', 'entities', 'start_date', 'end_date', 'financing', 'chief',
+            'documents', 'members')
+        # depth = 1
 
 
 class RegisterSerializer(serializers.ModelSerializer):
