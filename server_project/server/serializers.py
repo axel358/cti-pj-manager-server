@@ -17,7 +17,15 @@ class DocumentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ProgramDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProgramDocument
+        fields = '__all__'
+
+
 class ProgramSerializer(serializers.ModelSerializer):
+    documents = ProgramDocumentSerializer(read_only=True, many=True)
+
     class Meta:
         model = Program
         fields = '__all__'

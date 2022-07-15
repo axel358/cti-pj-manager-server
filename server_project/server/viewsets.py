@@ -23,7 +23,7 @@ class ChiefViewSet(viewsets.ModelViewSet):
 class MembersViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MembersSerializer
-    
+
 class DocumentViewSet(viewsets.ModelViewSet):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
