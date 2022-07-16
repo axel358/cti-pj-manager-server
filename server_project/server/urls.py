@@ -7,7 +7,7 @@ from .views import (
     UpdateProfileView,
     LogoutAllView,
 )
-from .viewsets import ProgramViewSet, ProjectViewSet, ChiefViewSet, MembersViewSet, DocumentViewSet
+from .viewsets import ProgramViewSet, ProjectViewSet, ChiefViewSet, MembersViewSet, ProjectDocumentViewSet
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 router = routers.DefaultRouter()
@@ -15,7 +15,7 @@ router.register(r"projects", ProjectViewSet)
 router.register(r"programs", ProgramViewSet)
 router.register(r"chief", ChiefViewSet)
 router.register(r"members", MembersViewSet)
-router.register(r"documents", DocumentViewSet)
+router.register(r"projectdocuments", ProjectDocumentViewSet)
 app_name = "server"
 
 urlpatterns = [
@@ -35,4 +35,4 @@ urlpatterns = [
     ),
     path("logout/", LogoutAllView.as_view(), name="user_logout"),
 
-]
+]

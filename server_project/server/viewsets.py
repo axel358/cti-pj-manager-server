@@ -24,6 +24,6 @@ class MembersViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MembersSerializer
 
-class DocumentViewSet(viewsets.ModelViewSet):
-    queryset = Document.objects.all()
-    serializer_class = DocumentSerializer
+class ProjectDocumentViewSet(viewsets.ModelViewSet):
+    queryset = ProjectDocument.objects.all()
+    serializer_class = ProjectDocumentSerializer

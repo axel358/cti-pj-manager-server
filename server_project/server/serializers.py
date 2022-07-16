@@ -11,9 +11,9 @@ class MembersSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DocumentSerializer(serializers.ModelSerializer):
+class ProjectDocumentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Document
+        model = ProjectDocument
         fields = '__all__'
 
 
@@ -38,7 +38,7 @@ class ChiefSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    documents = DocumentSerializer(read_only=True, many=True)
+    documents = ProjectDocumentSerializer(read_only=True, many=True)
     members = MembersSerializer(read_only=True, many=True)
 
     class Meta:

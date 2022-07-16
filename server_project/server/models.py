@@ -120,16 +120,21 @@ class Member(models.Model):
         return self.name
 
 
-class Document(models.Model):
+class ProjectDocument(models.Model):
 
     def get_upload_folder(self, filename):
-        return os.path.join(self.project.name, filename)
+        program = self.project.program
+
+        if program is not None:
+            return os.path.join('Programas', program.name, 'Projectos', self.project.name, filename)
+        else:
+            return os.path.join('Projectos', self.project.name, filename)
 
     name = models.TextField()
     project = models.ForeignKey(Project,
                                 on_delete=models.CASCADE,
                                 related_name='documents')
-    file = models.FileField(upload_to=get_upload_folder, null=True)
+    file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.name
