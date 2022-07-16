@@ -58,7 +58,7 @@ class Program(models.Model):
 class ProgramDocument(models.Model):
 
     def get_upload_folder(self, filename):
-        return os.path.join(self.program.name, filename)
+        return os.path.join('Programs', self.program.name, filename)
 
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
@@ -130,7 +130,7 @@ class ProjectDocument(models.Model):
         else:
             return os.path.join('Projectos', self.project.name, filename)
 
-    name = models.TextField()
+    name = models.CharField(max_length=255)
     project = models.ForeignKey(Project,
                                 on_delete=models.CASCADE,
                                 related_name='documents')
