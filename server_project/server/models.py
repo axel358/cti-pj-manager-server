@@ -58,7 +58,7 @@ class Program(models.Model):
 class ProgramDocument(models.Model):
 
     def get_upload_folder(self, filename):
-        return os.path.join('Programs', self.program.name, filename)
+        return os.path.join('Programas', self.program.name, filename)
 
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
