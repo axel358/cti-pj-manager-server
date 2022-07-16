@@ -30,21 +30,27 @@ from rest_framework import status
 
 
 class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
+    queryset = Chief.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
 
 class ChangePasswordView(generics.UpdateAPIView):
-    queryset = User.objects.all()
+    queryset = Chief.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
 
 
 class UpdateProfileView(generics.UpdateAPIView):
-    queryset = User.objects.all()
+    queryset = Chief.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = UpdateUserSerializer
+
+
+class UsersListView(generics.UpdateAPIView):
+    queryset = Chief.objects.all()
+    permission_classes = (IsAdminUser,)
+    serializer_class = UsersListSerializer
 
 
 class LogoutView(APIView):

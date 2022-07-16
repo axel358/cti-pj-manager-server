@@ -7,8 +7,15 @@ from django.utils import timezone
 
 
 class Chief(User):
-    name = models.TextField()
-    is_program_chief = models.BooleanField()
+    USERS_ROLES = [
+        ('project_chief', 'Jefe de Proyecto'),
+        ('program_chief', 'Jefe de Programa'),
+        ('human_res', 'Recursos Humanos'),
+        ('economy', 'Economia'),
+        ('vicedec_inv_postgr', 'Vicedecano de Investigacion y Postgrado')
+
+    ]
+    chief_type = models.TextField(max_length=255, choices=USERS_ROLES, default='project_chief')
 
     class Meta:
         verbose_name = 'Chief'
@@ -137,4 +144,4 @@ class ProjectDocument(models.Model):
     file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.name

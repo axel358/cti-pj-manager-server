@@ -52,25 +52,30 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
-        required=True, validators=[UniqueValidator(queryset=User.objects.all())]
+        required=True, validators=[UniqueValidator(queryset=Chief.objects.all())]
     )
 
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
     password2 = serializers.CharField(write_only=True, required=True)
+    chief_type = serializers.ChoiceField(required=True, choices=Chief.USERS_ROLES)
 
     class Meta:
-        model = User
+        model = Chief
         fields = (
             "username",
             "password",
             "password2",
+            "email",
+            "chief_type",
         )
         extra_kwargs = {
             "username": {"required": True},
             "password": {"required": True},
             "password2": {"required": True},
+            "email": {"required": True},
+            "chief_type": {"required": True},
         }
 
     def validate(self, attrs):
@@ -82,8 +87,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create(
+        user = Chief.objects.create(
             username=validated_data["username"],
+            email=validated_data["email"],
+            chief_type=validated_data["chief_type"]
         )
         user.set_password(validated_data["password"])
         user.save()
@@ -99,7 +106,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
     old_password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
-        model = User
+        model = Chief
         fields = ("old_password", "password", "password2")
 
     def validate(self, attrs):
@@ -136,7 +143,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
 
     class Meta:
-        model = User
+        model = Chief
         fields = "username"
         extra_kwargs = {
             "username": {"required": True},
@@ -162,3 +169,9 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class UsersListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chief
+        fields = '__all__'

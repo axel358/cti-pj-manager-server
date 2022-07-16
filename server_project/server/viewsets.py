@@ -14,15 +14,10 @@ class ProgramViewSet(viewsets.ModelViewSet):
     serializer_class = ProgramSerializer
 
 
-class ChiefViewSet(viewsets.ModelViewSet):
-    queryset = Chief.objects.all()
-    serializer_class = ChiefSerializer
-    # permission_classes = [IsAdminUser]
-
-
 class MembersViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MembersSerializer
+
 
 class ProjectDocumentViewSet(viewsets.ModelViewSet):
     queryset = ProjectDocument.objects.all()
