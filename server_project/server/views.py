@@ -14,30 +14,15 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-# class ProjectCreate(generics.CreateAPIView):
-#     queryset = Project.objects.all()
-#     serializer_class = ProjectSerializer
-#
-#
-# class ProjectUpdate(generics.RetrieveUpdateAPIView):
-#     queryset = Project.objects.all()
-#     serializer_class = ProjectSerializer
-#
-#
-# class ProjectDelete(generics.DestroyAPIView):
-#     queryset = Project.objects.all()
-#     serializer_class = ProjectSerializer
-
-
 class RegisterView(generics.CreateAPIView):
     queryset = Chief.objects.all()
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAdminUser,)
     serializer_class = RegisterSerializer
 
 
 class ChangePasswordView(generics.UpdateAPIView):
     queryset = Chief.objects.all()
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAdminUser,)
     serializer_class = ChangePasswordSerializer
 
 
@@ -47,7 +32,7 @@ class UpdateProfileView(generics.UpdateAPIView):
     serializer_class = UpdateUserSerializer
 
 
-class UsersListView(generics.UpdateAPIView):
+class UsersListView(generics.ListAPIView):
     queryset = Chief.objects.all()
     permission_classes = (IsAdminUser,)
     serializer_class = UsersListSerializer

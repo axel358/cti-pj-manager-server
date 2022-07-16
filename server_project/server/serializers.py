@@ -1,4 +1,3 @@
-from django.urls import reverse_lazy
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
@@ -31,12 +30,6 @@ class ProgramSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ChiefSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Chief
-        fields = '__all__'
-
-
 class ProjectSerializer(serializers.ModelSerializer):
     documents = ProjectDocumentSerializer(read_only=True, many=True)
     members = MembersSerializer(read_only=True, many=True)
@@ -60,6 +53,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     )
     password2 = serializers.CharField(write_only=True, required=True)
     chief_type = serializers.ChoiceField(required=True, choices=Chief.USERS_ROLES)
+    first_name = serializers.CharField(required=True, max_length=70)
+    last_name = serializers.CharField(required=True, max_length=70)
 
     class Meta:
         model = Chief
@@ -67,6 +62,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             "username",
             "password",
             "password2",
+            "first_name",
+            "last_name",
             "email",
             "chief_type",
         )
@@ -74,6 +71,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             "username": {"required": True},
             "password": {"required": True},
             "password2": {"required": True},
+            "first_name": {"required": True},
+            "last_name": {"required": True},
             "email": {"required": True},
             "chief_type": {"required": True},
         }
@@ -89,8 +88,10 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = Chief.objects.create(
             username=validated_data["username"],
+            first_name=validated_data["first_name"],
+            last_name=validated_data["last_name"],
             email=validated_data["email"],
-            chief_type=validated_data["chief_type"]
+            chief_type=validated_data["chief_type"],
         )
         user.set_password(validated_data["password"])
         user.save()
@@ -144,27 +145,50 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chief
-        fields = "username"
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "chief_type",
+        )
         extra_kwargs = {
             "username": {"required": True},
+            "first_name": {"required": True},
+            "last_name": {"required": True},
+            "email": {"required": True},
+            "chief_type": {"required": True},
+
         }
 
     def validate_username(self, value):
         user = self.context["request"].user
-        if User.objects.exclude(pk=user.pk).filter(username=value).exists():
+        if Chief.objects.exclude(pk=user.pk).filter(username=value).exists():
             raise serializers.ValidationError(
                 {"username": "This username is already in use."}
             )
         return value
 
-    def update(self, instance, validated_data):
+    def validate_email(self, value):
         user = self.context["request"].user
-
-        if user.pk != instance.pk:
+        if Chief.objects.exclude(pk=user.pk).filter(email=value).exists():
             raise serializers.ValidationError(
-                {"authorize": "You dont have permission for this user."}
+                {"email": "This email is already in use."}
             )
+        return value
+
+    def update(self, instance, validated_data):
+        # user = self.context["request"].user
+
+        # if user.pk != instance.pk:
+        #     raise serializers.ValidationError(
+        #         {"authorize": "You dont have permission for this user."}
+        #     )
         instance.username = validated_data["username"]
+        instance.first_name = validated_data["first_name"]
+        instance.last_name = validated_data["last_name"]
+        instance.email = validated_data["email"]
+        instance.chief_type = validated_data["chief_type"]
 
         instance.save()
 

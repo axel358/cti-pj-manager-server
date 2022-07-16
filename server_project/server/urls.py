@@ -33,9 +33,9 @@ urlpatterns = [
         name="auth_update_profile",
     ),
     path(
-        "userslist/",
+        "users_list/",
         UsersListView.as_view(),
-        name="auth_update_profile",
+        name="list_users",
     ),
     path("logout/", LogoutAllView.as_view(), name="user_logout"),
 
