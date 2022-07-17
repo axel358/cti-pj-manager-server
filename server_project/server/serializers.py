@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from .models import *
+from django.contrib.auth.models import Group, Permission
 
 
 class MembersSerializer(serializers.ModelSerializer):
@@ -27,12 +28,14 @@ class GroupDocumentSerializer(serializers.ModelSerializer):
         model = GroupDocument
         fields = '__all__'
 
+
 class DocumentGroupSerializer(serializers.ModelSerializer):
     documents = GroupDocumentSerializer(read_only=True, many=True)
 
     class Meta:
         model = DocumentGroup
         fields = '__all__'
+
 
 class ProgramSerializer(serializers.ModelSerializer):
     documents = ProgramDocumentSerializer(read_only=True, many=True)
@@ -107,6 +110,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             chief_type=validated_data["chief_type"],
         )
         user.set_password(validated_data["password"])
+        group, created = Group.objects.get_or_create(name=user.chief_type)
+        group.user_set.add(user)
         user.save()
 
         return user
@@ -176,7 +181,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
     def validate_username(self, value):
         user = self.context["request"].user
-        if Chief.objects.exclude(pk=user.pk).filter(username=value).exists():
+        if Chief.objects.exclude(pk=25).filter(username=value).exists():
             raise serializers.ValidationError(
                 {"username": "This username is already in use."}
             )
@@ -204,6 +209,9 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.chief_type = validated_data["chief_type"]
 
         instance.save()
+        group, created = Group.objects.get_or_create(name=instance.chief_type)
+        instance.groups.clear()
+        group.user_set.add(instance)
 
         return instance
 
