@@ -22,6 +22,18 @@ class ProgramDocumentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class GroupDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroupDocument
+        fields = '__all__'
+
+class DocumentGroupSerializer(serializers.ModelSerializer):
+    documents = GroupDocumentSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = DocumentGroup
+        fields = '__all__'
+
 class ProgramSerializer(serializers.ModelSerializer):
     documents = ProgramDocumentSerializer(read_only=True, many=True)
 
@@ -32,6 +44,7 @@ class ProgramSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     documents = ProjectDocumentSerializer(read_only=True, many=True)
+    document_groups = DocumentGroupSerializer(read_only=True, many=True)
     members = MembersSerializer(read_only=True, many=True)
 
     class Meta:
@@ -39,7 +52,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'project_code', 'program', 'program_code', 'project_classification', 'pj_type',
             'main_entity', 'entities', 'start_date', 'end_date', 'financing', 'chief',
-            'documents', 'members')
+            'documents', 'document_groups', 'members')
         # depth = 1
 
 

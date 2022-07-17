@@ -145,3 +145,36 @@ class ProjectDocument(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class DocumentGroup(models.Model):
+
+    name = models.CharField(max_length=255)
+    project = models.ForeignKey(Project,
+                                on_delete=models.CASCADE,
+                                related_name='document_groups')
+
+    def __str__(self):
+        return self.name
+
+class GroupDocument(models.Model):
+
+    def get_upload_folder(self, filename):
+        program = self.group.project.program
+
+        if program is not None:
+            return os.path.join('Programas', program.name, 'Projectos', self.group.project.name, self.group.name, filename)
+        else:
+            return os.path.join('Projectos', self.group.project.name, self.group.name, filename)
+
+    name = models.CharField(max_length=255)
+    group = models.ForeignKey(DocumentGroup,
+                                on_delete=models.CASCADE,
+                                related_name='documents')
+
+    file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
