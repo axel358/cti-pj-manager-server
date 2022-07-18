@@ -8,14 +8,13 @@ from django.utils import timezone
 
 class Chief(User):
     USERS_ROLES = [
-        ('project_chief', 'Jefe de Proyecto'),
-        ('program_chief', 'Jefe de Programa'),
+        ('project_program_both_chief', 'Jefe de Proyecto/ Programa / Ambos'),
         ('human_res', 'Recursos Humanos'),
         ('economy', 'Economia'),
         ('vicedec_inv_postgr', 'Vicedecano de Investigacion y Postgrado')
 
     ]
-    chief_type = models.TextField(max_length=255, choices=USERS_ROLES, default='project_chief')
+    chief_type = models.TextField(max_length=255, choices=USERS_ROLES, default='human_res')
 
     class Meta:
         verbose_name = 'Chief'
@@ -148,7 +147,6 @@ class ProjectDocument(models.Model):
 
 
 class DocumentGroup(models.Model):
-
     name = models.CharField(max_length=255)
     project = models.ForeignKey(Project,
                                 on_delete=models.CASCADE,
@@ -157,24 +155,24 @@ class DocumentGroup(models.Model):
     def __str__(self):
         return self.name
 
+
 class GroupDocument(models.Model):
 
     def get_upload_folder(self, filename):
         program = self.group.project.program
 
         if program is not None:
-            return os.path.join('Programas', program.name, 'Projectos', self.group.project.name, self.group.name, filename)
+            return os.path.join('Programas', program.name, 'Projectos', self.group.project.name, self.group.name,
+                                filename)
         else:
             return os.path.join('Projectos', self.group.project.name, self.group.name, filename)
 
     name = models.CharField(max_length=255)
     group = models.ForeignKey(DocumentGroup,
-                                on_delete=models.CASCADE,
-                                related_name='documents')
+                              on_delete=models.CASCADE,
+                              related_name='documents')
 
     file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
 
     def __str__(self):
         return self.name
-
-

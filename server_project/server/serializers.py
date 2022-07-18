@@ -110,8 +110,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             chief_type=validated_data["chief_type"],
         )
         user.set_password(validated_data["password"])
-        group, created = Group.objects.get_or_create(name=user.chief_type)
-        group.user_set.add(user)
+        if user.chief_type != 'project_program_both_chief':
+            group, created = Group.objects.get_or_create(name=user.chief_type)
+            group.user_set.add(user)
         user.save()
 
         return user
@@ -181,7 +182,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
     def validate_username(self, value):
         user = self.context["request"].user
-        if Chief.objects.exclude(pk=25).filter(username=value).exists():
+        if Chief.objects.exclude(pk=user.pk).filter(username=value).exists():
             raise serializers.ValidationError(
                 {"username": "This username is already in use."}
             )
@@ -209,9 +210,10 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.chief_type = validated_data["chief_type"]
 
         instance.save()
-        group, created = Group.objects.get_or_create(name=instance.chief_type)
-        instance.groups.clear()
-        group.user_set.add(instance)
+        if instance.chief_type != 'project_program_both_chief':
+            group, created = Group.objects.get_or_create(name=instance.chief_type)
+            instance.groups.clear()
+            group.user_set.add(instance)
 
         return instance
 
