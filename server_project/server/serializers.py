@@ -44,6 +44,14 @@ class ProgramSerializer(serializers.ModelSerializer):
         model = Program
         fields = '__all__'
 
+    def create(self, validated_data):
+        chief = validated_data["chief"]
+        if chief is not None:
+            group, created = Group.objects.get_or_create(name='program_chiefs')
+            group.user_set.add(chief)
+
+        return Program.objects.create(**validated_data)
+
 
 class ProjectSerializer(serializers.ModelSerializer):
     documents = ProjectDocumentSerializer(read_only=True, many=True)
@@ -57,6 +65,12 @@ class ProjectSerializer(serializers.ModelSerializer):
             'main_entity', 'entities', 'start_date', 'end_date', 'financing', 'chief',
             'documents', 'document_groups', 'members')
         # depth = 1
+
+    def create(self, validated_data):
+        chief = validated_data["chief"]
+        group, created = Group.objects.get_or_create(name='project_chiefs')
+        group.user_set.add(chief)
+        return Project.objects.create(**validated_data)
 
 
 class RegisterSerializer(serializers.ModelSerializer):

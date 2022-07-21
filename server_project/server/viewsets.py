@@ -11,7 +11,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         project = self.get_object()
         group, created = Group.objects.get_or_create(name='project_chiefs')
-        group.user_set.remove(project.chief)
+        is_have_only_one = Project.objects.exclude(id=project.id).filter(chief=project.chief.id).exists()
+        if not is_have_only_one:
+            group.user_set.remove(project.chief)
 
         return super(ProjectViewSet, self).destroy(request, *args, **kwargs)
 
