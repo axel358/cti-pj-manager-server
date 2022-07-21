@@ -1,15 +1,15 @@
+import datetime
 import os
 
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
 
 
 class Chief(User):
     USERS_ROLES = [
         ('project_program_both_chief', 'Jefe de Proyecto/ Programa / Ambos'),
-        ('human_res', 'Recursos Humanos'),
+        ('human_resources', 'Recursos Humanos'),
         ('economy', 'Economia'),
         ('vicedec_inv_postgr', 'Vicedecano de Investigacion y Postgrado')
 
@@ -43,8 +43,8 @@ class Program(models.Model):
     main_entity = models.TextField(null=True, blank=True)
     secretary = models.TextField(null=True, blank=True)
     experts_group = models.TextField(null=True, blank=True)
-    start_date = models.DateField(default=timezone.now)
-    end_date = models.DateField(default=timezone.now)
+    start_date = models.DateField(default=datetime.date.today)
+    end_date = models.DateField(default=datetime.date.today)
     pj_amount = models.IntegerField(null=True, blank=True)
     money = models.BigIntegerField(null=True, blank=True)
     user_clients = models.TextField(null=True, blank=True)
@@ -97,8 +97,8 @@ class Project(models.Model):
     main_entity = models.TextField()
     entities = models.TextField()
     chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='projects')
-    start_date = models.DateField(default=timezone.now)
-    end_date = models.DateField(default=timezone.now)
+    start_date = models.DateField(default=datetime.date.today)
+    end_date = models.DateField(default=datetime.date.today)
     financing = models.PositiveBigIntegerField(default=0)
 
     def save(self, *args, **kwargs):
