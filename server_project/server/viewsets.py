@@ -1,12 +1,16 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAdminUser
-
+from rest_framework.response import Response
 from .serializers import *
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+    def list(self, request):
+        serializer = ProjectSimpleSerializer(self.queryset, many=True)
+        return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         project = self.get_object()
@@ -21,6 +25,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
 class ProgramViewSet(viewsets.ModelViewSet):
     queryset = Program.objects.all()
     serializer_class = ProgramSerializer
+
+    def list(self, request):
+        serializer = ProgramSimpleSerializer(self.queryset, many=True)
+        return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         program = self.get_object()

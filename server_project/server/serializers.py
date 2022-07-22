@@ -37,6 +37,13 @@ class DocumentGroupSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ProgramSimpleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Program
+        fields = ['id', 'name']
+
+
 class ProgramSerializer(serializers.ModelSerializer):
     documents = ProgramDocumentSerializer(read_only=True, many=True)
 
@@ -53,6 +60,13 @@ class ProgramSerializer(serializers.ModelSerializer):
         return Program.objects.create(**validated_data)
 
 
+class ProjectSimpleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name']
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     documents = ProjectDocumentSerializer(read_only=True, many=True)
     document_groups = DocumentGroupSerializer(read_only=True, many=True)
@@ -60,10 +74,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = (
-            'id', 'name', 'project_code', 'program', 'program_code', 'project_classification', 'pj_type',
-            'main_entity', 'entities', 'start_date', 'end_date', 'financing', 'chief',
-            'documents', 'document_groups', 'members')
+        fields = '__all__'
         # depth = 1
 
     def create(self, validated_data):
