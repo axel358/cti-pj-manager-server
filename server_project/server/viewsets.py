@@ -1,5 +1,4 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAdminUser
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .serializers import *
 
@@ -8,7 +7,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         serializer = ProjectSimpleSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
@@ -19,14 +18,16 @@ class ProjectViewSet(viewsets.ModelViewSet):
         if not is_have_only_one:
             group.user_set.remove(project.chief)
 
-        return super(ProjectViewSet, self).destroy(request, *args, **kwargs)
+        # super(ProjectViewSet, self).destroy(request, *args, **kwargs)
+        self.perform_destroy(project)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ProgramViewSet(viewsets.ModelViewSet):
     queryset = Program.objects.all()
     serializer_class = ProgramSerializer
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         serializer = ProgramSimpleSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
@@ -36,7 +37,8 @@ class ProgramViewSet(viewsets.ModelViewSet):
             group, created = Group.objects.get_or_create(name='program_chiefs')
             group.user_set.remove(program.chief)
 
-        return super(ProgramViewSet, self).destroy(request, *args, **kwargs)
+        self.perform_destroy(program)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class MembersViewSet(viewsets.ModelViewSet):
