@@ -141,6 +141,28 @@ class ProjectDocument(models.Model):
                                 on_delete=models.CASCADE,
                                 related_name='documents')
     file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
+    DOCUMENT_TYPES = [('other', 'Otro'),
+                     ('profile', 'Perfil'),
+                     ('contract', 'Contract'),
+                     ('rsjf', 'Resolución de nombramiento del jefe de proyecto'),
+                     ('cidef', 'Compatibilización con los intereses de la Defensa'),
+                     ('roap', 'Resolución oficial de aprobación del proyecto'),
+                     ('dapcca', 'Dictamen de aprobación del proyecto por el CCA'),
+                     ('dpddp', 'Documentos de planificación del diseño y desarrollo del producto'),
+                     ('dpac', 'Desglose del presupuesto del año en curso'),
+                     ('mca', 'Anexo 15 Modelo de certificación de actividades'),
+                     ('isp', 'Anexo 13 Informe semestral del proyecto'),
+                     ('ict', 'Informe científico técnico'),
+                     ('dapiscca', 'Dictamen de aprobación del informe semestral por el CCA'),
+                     ('dgeri', 'Dictamen del Grupo de Expertos sobre los resultados y el Informe de la Etapa'),
+                     ('mnig', 'Anexo 16 Modelo de Notificación de Ingresos/Gastos'),
+                     ('bcpr', 'Base de cálculo para el pago por remuneración'),
+                     ('acpp', 'Acta de conformidad de los participantes del proyecto'),
+                     ('cpr', 'Certificación para el pago de la remuneración'),
+                     ('cpie', 'Anexo 8. Certifico para el pago de los investigadores externos'),
+                     ('csbie', 'Certifico del salario básico de los investigadores externos'),
+                     ('fciie', 'Fotos escaneadas del carné de identidad de los investigadores')]
+    dtype = models.CharField(max_length=512, choices=DOCUMENT_TYPES, default='other')
 
     def __str__(self):
         return self.name
