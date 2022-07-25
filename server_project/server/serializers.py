@@ -38,7 +38,6 @@ class DocumentGroupSerializer(serializers.ModelSerializer):
 
 
 class ProgramSimpleSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Program
         fields = ['id', 'name']
@@ -59,9 +58,20 @@ class ProgramSerializer(serializers.ModelSerializer):
 
         return Program.objects.create(**validated_data)
 
+    def update(self, instance, validated_data):
+
+        if instance.chief != validated_data['chief']:
+            group, created = Group.objects.get_or_create(name='program_chiefs')
+            group.user_set.remove(instance.chief)
+            group.user_set.add(validated_data['chief'])
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
 
 class ProjectSimpleSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Project
         fields = ['id', 'name']
@@ -82,6 +92,19 @@ class ProjectSerializer(serializers.ModelSerializer):
         group, created = Group.objects.get_or_create(name='project_chiefs')
         group.user_set.add(chief)
         return Project.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        if instance.chief != validated_data['chief']:
+            group, created = Group.objects.get_or_create(name='project_chiefs')
+            is_have_more_projects = Project.objects.exclude(id=instance.id).filter(chief=instance.chief.id).exists()
+            if not is_have_more_projects:
+                group.user_set.remove(instance.chief)
+            group.user_set.add(validated_data['chief'])
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 
 
 class RegisterSerializer(serializers.ModelSerializer):
