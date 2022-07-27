@@ -31,6 +31,10 @@ class ProgramViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         serializer = ProgramSimpleSerializer(self.queryset, many=True)
+        if IsAdminUser().has_permission(self.request, self):
+            serializer = ProgramSimpleSerializer(self.queryset, many=True)
+        else:
+            serializer = ProgramSimpleSerializer(self.queryset.filter(chief=request.user.id), many=True)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
@@ -38,13 +42,12 @@ class ProgramViewSet(viewsets.ModelViewSet):
         if program.chief is not None:
             group, created = Group.objects.get_or_create(name='program_chiefs')
             group.user_set.remove(program.chief)
-
         self.perform_destroy(program)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_permissions(self):
         if self.request.method == "GET":
-            self.permission_classes = [IsAuthenticated, IsAdminUser | IsProgramChief]
+            self.permission_classes = [IsAuthenticated & IsAdminUser | IsProgramChief]
         else:
             self.permission_classes = [IsAuthenticated, IsAdminUser, ]
         return super(ProgramViewSet, self).get_permissions()
