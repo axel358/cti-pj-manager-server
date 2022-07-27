@@ -1,6 +1,8 @@
 from rest_framework import viewsets, status
+from rest_framework.permissions import *
 from rest_framework.response import Response
 from .serializers import *
+from .permissions import *
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -39,6 +41,13 @@ class ProgramViewSet(viewsets.ModelViewSet):
 
         self.perform_destroy(program)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            self.permission_classes = [IsAuthenticated, IsAdminUser | IsProgramChief]
+        else:
+            self.permission_classes = [IsAuthenticated, IsAdminUser, ]
+        return super(ProgramViewSet, self).get_permissions()
 
 
 class MembersViewSet(viewsets.ModelViewSet):
