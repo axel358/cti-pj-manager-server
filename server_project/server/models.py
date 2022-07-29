@@ -149,6 +149,21 @@ class ProjectDocument(models.Model):
                      ('roap', 'Resolución oficial de aprobación del proyecto'),
                      ('dapcca', 'Dictamen de aprobación del proyecto por el CCA'),
                      ('dpddp', 'Documentos de planificación del diseño y desarrollo del producto'),
+                     ('csbie', 'Certifico del salario básico de los investigadores externos'),
+                     ('fciie', 'Fotos escaneadas del carné de identidad de los investigadores')]
+    dtype = models.CharField(max_length=512, choices=DOCUMENT_TYPES, default='other')
+
+    def __str__(self):
+        return self.name if self.dtype == 'other' else self.dtype
+
+
+class DocumentGroup(models.Model):
+    name = models.CharField(max_length=255)
+    project = models.ForeignKey(Project,
+                                on_delete=models.CASCADE,
+                                related_name='document_groups')
+
+    DOCUMENT_TYPES = [('other', 'Otro'),
                      ('dpac', 'Desglose del presupuesto del año en curso'),
                      ('mca', 'Anexo 15 Modelo de certificación de actividades'),
                      ('isp', 'Anexo 13 Informe semestral del proyecto'),
@@ -159,37 +174,26 @@ class ProjectDocument(models.Model):
                      ('bcpr', 'Base de cálculo para el pago por remuneración'),
                      ('acpp', 'Acta de conformidad de los participantes del proyecto'),
                      ('cpr', 'Certificación para el pago de la remuneración'),
-                     ('cpie', 'Anexo 8. Certifico para el pago de los investigadores externos'),
-                     ('csbie', 'Certifico del salario básico de los investigadores externos'),
-                     ('fciie', 'Fotos escaneadas del carné de identidad de los investigadores')]
+                     ('cpie', 'Anexo 8. Certifico para el pago de los investigadores externos')]
+
     dtype = models.CharField(max_length=512, choices=DOCUMENT_TYPES, default='other')
 
     def __str__(self):
-        return self.name
-
-
-class DocumentGroup(models.Model):
-    name = models.CharField(max_length=255)
-    project = models.ForeignKey(Project,
-                                on_delete=models.CASCADE,
-                                related_name='document_groups')
-
-    def __str__(self):
-        return self.name
+        return self.name if self.dtype == 'other' else self.dtype
 
 
 class GroupDocument(models.Model):
 
     def get_upload_folder(self, filename):
         program = self.group.project.program
+        group = self.group.name if self.group.dtype == 'other' else self.group.dtype
 
         if program is not None:
-            return os.path.join('Programas', program.name, 'Projectos', self.group.project.name, self.group.name,
+            return os.path.join('Programas', program.name, 'Projectos', self.group.project.name, group,
                                 filename)
         else:
-            return os.path.join('Projectos', self.group.project.name, self.group.name, filename)
+            return os.path.join('Projectos', self.group.project.name, group, filename)
 
-    name = models.CharField(max_length=255)
     group = models.ForeignKey(DocumentGroup,
                               on_delete=models.CASCADE,
                               related_name='documents')
@@ -197,4 +201,4 @@ class GroupDocument(models.Model):
     file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.group.name if self.group.dtype == 'other' else self.group.dtype
