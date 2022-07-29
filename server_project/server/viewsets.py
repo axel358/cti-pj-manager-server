@@ -10,7 +10,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
 
     def list(self, request, *args, **kwargs):
-        serializer = ProjectSimpleSerializer(self.queryset, many=True)
+        queryset = Project.objects.all()
+        serializer = ProjectSimpleSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):

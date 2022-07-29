@@ -88,13 +88,13 @@ class Project(models.Model):
         ('i_d', 'Aplicada y de Desarrollo'),
         ('inn', 'Innovación')
     ]
-    name = models.TextField()
+    name = models.CharField(max_length=255)
     project_code = models.CharField(max_length=10, default="0")
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='projects', null=True, blank=True)
     program_code = models.CharField(max_length=10, default="0")
     project_classification = models.TextField(max_length=255, choices=PROJECTS_CLASS_OPTIONS, default='i_bas')
     pj_type = models.TextField(max_length=255, choices=PROJECTS_TYPES, default='papt')
-    main_entity = models.TextField()
+    main_entity = models.CharField(max_length=255)
     entities = models.TextField()
     chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='projects')
     start_date = models.DateField(default=datetime.date.today)
