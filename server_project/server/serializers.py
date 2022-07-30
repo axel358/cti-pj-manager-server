@@ -37,10 +37,18 @@ class DocumentGroupSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ProjectSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['id', 'name']
+
+
 class ProgramSimpleSerializer(serializers.ModelSerializer):
+    projects_details = ProjectSimpleSerializer(source='projects', read_only=True, many=True)
+
     class Meta:
         model = Program
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'projects_details']
 
 
 class ProgramSerializer(serializers.ModelSerializer):
@@ -69,12 +77,6 @@ class ProgramSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
-
-
-class ProjectSimpleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = ['id', 'name']
 
 
 class ProjectSerializer(serializers.ModelSerializer):
