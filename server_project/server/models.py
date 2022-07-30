@@ -136,7 +136,7 @@ class ProjectDocument(models.Model):
         else:
             return os.path.join('Projectos', self.project.name, filename)
 
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True, blank=True)
     project = models.ForeignKey(Project,
                                 on_delete=models.CASCADE,
                                 related_name='documents')
@@ -154,11 +154,11 @@ class ProjectDocument(models.Model):
     dtype = models.CharField(max_length=512, choices=DOCUMENT_TYPES, default='other')
 
     def __str__(self):
-        return self.name if self.dtype == 'other' else self.dtype
+        return self.name if self.dtype == 'other' else self.get_dtype_display()
 
 
 class DocumentGroup(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True, blank=True)
     project = models.ForeignKey(Project,
                                 on_delete=models.CASCADE,
                                 related_name='document_groups')
@@ -179,14 +179,14 @@ class DocumentGroup(models.Model):
     dtype = models.CharField(max_length=512, choices=DOCUMENT_TYPES, default='other')
 
     def __str__(self):
-        return self.name if self.dtype == 'other' else self.dtype
+        return self.name if self.dtype == 'other' else self.get_dtype_display()
 
 
 class GroupDocument(models.Model):
 
     def get_upload_folder(self, filename):
         program = self.group.project.program
-        group = self.group.name if self.group.dtype == 'other' else self.group.dtype
+        group = self.group.name if self.group.dtype == 'other' else self.group.get_dtype_display()
 
         if program is not None:
             return os.path.join('Programas', program.name, 'Projectos', self.group.project.name, group,
@@ -199,6 +199,7 @@ class GroupDocument(models.Model):
                               related_name='documents')
 
     file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
+    date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
-        return self.group.name if self.group.dtype == 'other' else self.group.dtype
+        return self.group.name  + '_' + str(self.date) if self.group.dtype == 'other' else self.group.get_dtype_display() + '_' + str(self.date)
