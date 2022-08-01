@@ -140,7 +140,7 @@ class ProjectDocument(models.Model):
     project = models.ForeignKey(Project,
                                 on_delete=models.CASCADE,
                                 related_name='documents')
-    file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
+    file = models.FileField(upload_to=get_upload_folder, null=True, blank=True, max_length=256)
     DOCUMENT_TYPES = [('other', 'Otro'),
                      ('profile', 'Perfil'),
                      ('contract', 'Contract'),
@@ -198,7 +198,7 @@ class GroupDocument(models.Model):
                               on_delete=models.CASCADE,
                               related_name='documents')
 
-    file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
+    file = models.FileField(upload_to=get_upload_folder, null=True, blank=True, max_length=256)
     date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
