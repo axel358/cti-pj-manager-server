@@ -87,7 +87,16 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = '__all__'
-        # depth = 1
+
+    def get_fields(self, *args, **kargs):
+        self.document_groups = ProjectDocumentSerializer(read_only=True)
+        fields = super().get_fields(*args, **kargs)
+        if self.context.get('limited'):
+            # fields.pop('documents')
+            fields.pop('document_groups')
+
+        return fields
+
 
     def create(self, validated_data):
         chief = validated_data["chief"]
