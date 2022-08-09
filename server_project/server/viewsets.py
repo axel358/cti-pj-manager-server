@@ -44,9 +44,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = Project.objects.all()
         if IsProjectChief().has_permission(self.request, self):
-            serializer = ProjectSimpleSerializer(queryset.filter(chief=request.user.id), many=True)
+            serializer = ProjectSimpleSerializer(self.queryset.filter(chief=request.user.id), many=True)
         else:
-            serializer = ProjectSimpleSerializer(queryset, many=True)
+            serializer = ProjectSimpleSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
@@ -64,7 +64,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         if self.request.method == "GET":
             self.permission_classes = [IsAuthenticated & IsAdminUser | IsProjectChief | IsHumanResources | IsEconomyChief]
         else:
-            self.permission_classes = [IsAuthenticated, IsAdminUser, IsProjectChief]
+            self.permission_classes = [IsAuthenticated & IsAdminUser | IsProjectChief]
         return super(ProjectViewSet, self).get_permissions()
 
 

@@ -14,7 +14,7 @@ class Chief(User):
         ('vicedec_inv_postgr', 'Vicedecano de Investigacion y Postgrado')
 
     ]
-    chief_type = models.TextField(max_length=255, choices=USERS_ROLES, default='human_res')
+    chief_type = models.TextField(max_length=255, choices=USERS_ROLES, default='human_resources')
 
     class Meta:
         verbose_name = 'Chief'
