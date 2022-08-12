@@ -24,19 +24,20 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def filter_documents(self, data, allowed_types):
-        documents = data['documents']
-        index = 0
-        for document in documents:
-            if document['dtype'] not in allowed_types:
-                documents.pop(index)
-            index += 1
+        fd = []
+        for document in data['documents']:
+            if document['dtype'] in allowed_types:
+                 fd.append(document)
 
-        document_groups = data['document_groups']
-        index = 0
-        for document_group in document_groups:
-            if document_group['dtype'] not in allowed_types:
-                document_groups.pop(index)
-            index += 1
+        data['documents'] = fd
+
+        fdg = []
+
+        for document_group in data['document_groups']:
+            if document_group['dtype'] in allowed_types:
+                fdg.append(document_group)
+
+        data['document_groups'] = fdg
 
         return data
 
