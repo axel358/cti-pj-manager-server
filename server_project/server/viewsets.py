@@ -2,9 +2,19 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import *
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from rest_framework_simplejwt.views import TokenVerifyView, TokenObtainPairView
+
 from .serializers import *
 from .permissions import *
 import json
+
+
+class MyTokenVerifyView(TokenVerifyView):
+    serializer_class = MyTokenVerifySerializer
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -17,7 +27,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
         serializer = ProjectSerializer(project, context={'limited': False})
 
         if IsEconomyChief().has_permission(self.request, self):
-            return Response(self.filter_documents(serializer.data, ['profile', 'rsjf', 'contract', 'dpac', 'cpie', 'cpr']))
+            return Response(
+                self.filter_documents(serializer.data, ['profile', 'rsjf', 'contract', 'dpac', 'cpie', 'cpr']))
         elif IsHumanResources().has_permission(self.request, self):
             return Response(self.filter_documents(serializer.data, ['bcpr', 'cpr']))
 
@@ -27,7 +38,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         fd = []
         for document in data['documents']:
             if document['dtype'] in allowed_types:
-                 fd.append(document)
+                fd.append(document)
 
         data['documents'] = fd
 
@@ -40,7 +51,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
         data['document_groups'] = fdg
 
         return data
-
 
     def list(self, request, *args, **kwargs):
         queryset = Project.objects.all()
@@ -63,7 +73,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            self.permission_classes = [IsAuthenticated & IsAdminUser | IsProjectChief | IsHumanResources | IsEconomyChief]
+            self.permission_classes = [
+                IsAuthenticated & IsAdminUser | IsProjectChief | IsHumanResources | IsEconomyChief]
         else:
             self.permission_classes = [IsAuthenticated & IsAdminUser | IsProjectChief]
         return super(ProjectViewSet, self).get_permissions()

@@ -7,8 +7,8 @@ from .views import (
     UpdateProfileView,
     LogoutAllView, UsersListView
 )
-from .viewsets import ProgramViewSet, ProjectViewSet, MembersViewSet, ProjectDocumentViewSet
-from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
+from .viewsets import ProgramViewSet, ProjectViewSet, MembersViewSet, ProjectDocumentViewSet, MyTokenVerifyView,MyTokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 router = routers.DefaultRouter()
 router.register(r"projects", ProjectViewSet)
@@ -19,8 +19,9 @@ app_name = "server"
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("login/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("login/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("login/verify/", MyTokenVerifyView.as_view(), name="token_verify"),
     path("register/", RegisterView.as_view(), name="user_register"),
     path(
         "change_password/<int:pk>/",

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'server.apps.ServerConfig',
     'rest_framework',
+    'corsheaders',
 
 ]
 REST_FRAMEWORK = {
@@ -50,6 +51,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -91,18 +93,18 @@ WSGI_APPLICATION = "server_project.wsgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-     "default": {
-      "ENGINE": "django.db.backends.sqlite3",
-      "NAME": BASE_DIR / "db.sqlite3",
-     }
-    #"default": {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+    # "default": {
     #    "ENGINE": "django.db.backends.postgresql",
     #    "NAME": os.getenv("DB_NAME", "soft_database"),
     #    "USER": os.getenv("DB_USER", "postgres"),
     #    "PASSWORD": os.getenv("DB_PASS", "dayan1312"),
     #    "HOST": os.getenv("DB_SERVICE", "localhost"),
     #    "PORT": os.getenv("DB_PORT", "5432"),
-    #}
+    # }
 }
 
 # Password validation
@@ -147,3 +149,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+]
