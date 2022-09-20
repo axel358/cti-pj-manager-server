@@ -40,9 +40,18 @@ class DocumentGroupSerializer(serializers.ModelSerializer):
 
 
 class ProjectSimpleSerializer(serializers.ModelSerializer):
+    chief = serializers.SerializerMethodField()
+    project_classification = serializers.SerializerMethodField()
+
     class Meta:
         model = Project
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'chief', 'end_date', 'project_classification']
+
+    def get_chief(self, obj):
+        return obj.chief.first_name + ' ' + obj.chief.last_name
+
+    def get_project_classification(self, obj):
+        return obj.get_project_classification_display()
 
 
 class ProgramSimpleSerializer(serializers.ModelSerializer):
@@ -86,9 +95,22 @@ class ProjectSerializer(serializers.ModelSerializer):
     document_groups = DocumentGroupSerializer(read_only=True, many=True)
     members = MembersSerializer(read_only=True, many=True)
 
+    chief = serializers.SerializerMethodField()
+    project_classification = serializers.SerializerMethodField()
+    pj_type = serializers.SerializerMethodField()
+
     class Meta:
         model = Project
         fields = '__all__'
+
+    def get_chief(self, obj):
+        return obj.chief.first_name + ' ' + obj.chief.last_name
+
+    def get_project_classification(self, obj):
+        return obj.get_project_classification_display()
+
+    def get_pj_type(self, obj):
+        return obj.get_pj_type_display()
 
     def get_fields(self, *args, **kargs):
         self.document_groups = ProjectDocumentSerializer(read_only=True)
