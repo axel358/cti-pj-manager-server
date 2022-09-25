@@ -55,9 +55,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = Project.objects.all()
         if IsProjectChief().has_permission(self.request, self):
-            serializer = ProjectSimpleSerializer(self.queryset.filter(chief=request.user.id), many=True)
+            serializer = ProjectSerializer(queryset.filter(chief=request.user.id), many=True)
         else:
-            serializer = ProjectSimpleSerializer(self.queryset, many=True)
+            serializer = ProjectSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
@@ -85,11 +85,12 @@ class ProgramViewSet(viewsets.ModelViewSet):
     serializer_class = ProgramSerializer
 
     def list(self, request, *args, **kwargs):
-        serializer = ProgramSimpleSerializer(self.queryset, many=True)
+        queryset = Program.objects.all()
+        serializer = ProgramSimpleSerializer(queryset, many=True)
         if IsAdminUser().has_permission(self.request, self):
-            serializer = ProgramSimpleSerializer(self.queryset, many=True)
+            serializer = ProgramSimpleSerializer(queryset, many=True)
         else:
-            serializer = ProgramSimpleSerializer(self.queryset.filter(chief=request.user.id), many=True)
+            serializer = ProgramSimpleSerializer(queryset.filter(chief=request.user.id), many=True)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
