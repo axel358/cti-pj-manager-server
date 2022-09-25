@@ -55,9 +55,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = Project.objects.all()
         if IsProjectChief().has_permission(self.request, self):
-            serializer = ProjectSerializer(queryset.filter(chief=request.user.id), many=True)
+            serializer = ProjectSimpleSerializer(queryset.filter(chief=request.user.id), many=True)
         else:
-            serializer = ProjectSerializer(queryset, many=True)
+            serializer = ProjectSimpleSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
