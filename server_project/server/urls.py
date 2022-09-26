@@ -5,9 +5,10 @@ from .views import (
     RegisterView,
     ChangePasswordView,
     UpdateProfileView,
-    LogoutAllView, UsersListView
+    LogoutAllView, UsersListView,UserDetailsView
 )
-from .viewsets import ProgramViewSet, ProjectViewSet, MembersViewSet, ProjectDocumentViewSet, MyTokenVerifyView,MyTokenObtainPairView
+from .viewsets import ProgramViewSet, ProjectViewSet, MembersViewSet, ProjectDocumentViewSet, MyTokenVerifyView, \
+    MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 router = routers.DefaultRouter()
@@ -34,9 +35,14 @@ urlpatterns = [
         name="auth_update_profile",
     ),
     path(
-        "users_list/",
+        "users/",
         UsersListView.as_view(),
         name="list_users",
+    ),
+    path(
+        "user/<int:pk>/",
+        UserDetailsView.as_view(),
+        name="user_details",
     ),
     path("logout/", LogoutAllView.as_view(), name="user_logout"),
 

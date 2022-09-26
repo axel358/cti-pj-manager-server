@@ -39,6 +39,12 @@ class UsersListView(generics.ListAPIView):
     serializer_class = UsersListSerializer
 
 
+class UserDetailsView(generics.RetrieveAPIView):
+    queryset = Chief.objects.all()
+    permission_classes = (IsAdminUser,)
+    serializer_class = UsersListSerializer
+
+
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
 

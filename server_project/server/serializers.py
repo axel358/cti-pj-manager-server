@@ -59,7 +59,7 @@ class ProgramSimpleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Program
-        fields = ['id', 'name', 'projects_details']
+        fields = ['id', 'name', 'ptype', 'program_code', 'projects_details']
 
 
 class ProgramSerializer(serializers.ModelSerializer):
@@ -95,22 +95,14 @@ class ProjectSerializer(serializers.ModelSerializer):
     document_groups = DocumentGroupSerializer(read_only=True, many=True)
     members = MembersSerializer(read_only=True, many=True)
 
-    chief = serializers.SerializerMethodField()
-    project_classification = serializers.SerializerMethodField()
-    pj_type = serializers.SerializerMethodField()
-
     class Meta:
         model = Project
         fields = '__all__'
 
-    def get_chief(self, obj):
-        return obj.chief.first_name + ' ' + obj.chief.last_name
-
-    def get_project_classification(self, obj):
-        return obj.get_project_classification_display()
-
-    def get_pj_type(self, obj):
-        return obj.get_pj_type_display()
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
+        return response
 
     def get_fields(self, *args, **kargs):
         self.document_groups = ProjectDocumentSerializer(read_only=True)
@@ -122,7 +114,9 @@ class ProjectSerializer(serializers.ModelSerializer):
         return fields
 
     def create(self, validated_data):
-        chief = validated_data["chief"]
+        print(validated_data)
+        chief = validated_data['chief']
+        print(chief)
         group, created = Group.objects.get_or_create(name='project_chiefs')
         group.user_set.add(chief)
         return Project.objects.create(**validated_data)
