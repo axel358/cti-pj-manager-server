@@ -91,7 +91,7 @@ class Project(models.Model):
     name = models.CharField(max_length=255)
     project_code = models.CharField(max_length=10, default="0")
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='projects', null=True, blank=True)
-    program_code = models.CharField(max_length=10, default="0")
+    program_code = models.CharField(max_length=10, default="0", null=True, blank=True)
     project_classification = models.TextField(max_length=255, choices=PROJECTS_CLASS_OPTIONS, default='i_bas')
     pj_type = models.TextField(max_length=255, choices=PROJECTS_TYPES, default='papt')
     main_entity = models.CharField(max_length=255)
@@ -142,15 +142,15 @@ class ProjectDocument(models.Model):
                                 related_name='documents')
     file = models.FileField(upload_to=get_upload_folder, null=True, blank=True, max_length=256)
     DOCUMENT_TYPES = [('other', 'Otro'),
-                     ('profile', 'Perfil'),
-                     ('contract', 'Contract'),
-                     ('rsjf', 'Resolución de nombramiento del jefe de proyecto'),
-                     ('cidef', 'Compatibilización con los intereses de la Defensa'),
-                     ('roap', 'Resolución oficial de aprobación del proyecto'),
-                     ('dapcca', 'Dictamen de aprobación del proyecto por el CCA'),
-                     ('dpddp', 'Documentos de planificación del diseño y desarrollo del producto'),
-                     ('csbie', 'Certifico del salario básico de los investigadores externos'),
-                     ('fciie', 'Fotos escaneadas del carné de identidad de los investigadores')]
+                      ('profile', 'Perfil'),
+                      ('contract', 'Contract'),
+                      ('rsjf', 'Resolución de nombramiento del jefe de proyecto'),
+                      ('cidef', 'Compatibilización con los intereses de la Defensa'),
+                      ('roap', 'Resolución oficial de aprobación del proyecto'),
+                      ('dapcca', 'Dictamen de aprobación del proyecto por el CCA'),
+                      ('dpddp', 'Documentos de planificación del diseño y desarrollo del producto'),
+                      ('csbie', 'Certifico del salario básico de los investigadores externos'),
+                      ('fciie', 'Fotos escaneadas del carné de identidad de los investigadores')]
     dtype = models.CharField(max_length=512, choices=DOCUMENT_TYPES, default='other')
 
     def __str__(self):
@@ -164,17 +164,17 @@ class DocumentGroup(models.Model):
                                 related_name='document_groups')
 
     DOCUMENT_TYPES = [('other', 'Otro'),
-                     ('dpac', 'Desglose del presupuesto del año en curso'),
-                     ('mca', 'Anexo 15 Modelo de certificación de actividades'),
-                     ('isp', 'Anexo 13 Informe semestral del proyecto'),
-                     ('ict', 'Informe científico técnico'),
-                     ('dapiscca', 'Dictamen de aprobación del informe semestral por el CCA'),
-                     ('dgeri', 'Dictamen del Grupo de Expertos sobre los resultados y el Informe de la Etapa'),
-                     ('mnig', 'Anexo 16 Modelo de Notificación de Ingresos/Gastos'),
-                     ('bcpr', 'Base de cálculo para el pago por remuneración'),
-                     ('acpp', 'Acta de conformidad de los participantes del proyecto'),
-                     ('cpr', 'Certificación para el pago de la remuneración'),
-                     ('cpie', 'Anexo 8. Certifico para el pago de los investigadores externos')]
+                      ('dpac', 'Desglose del presupuesto del año en curso'),
+                      ('mca', 'Anexo 15 Modelo de certificación de actividades'),
+                      ('isp', 'Anexo 13 Informe semestral del proyecto'),
+                      ('ict', 'Informe científico técnico'),
+                      ('dapiscca', 'Dictamen de aprobación del informe semestral por el CCA'),
+                      ('dgeri', 'Dictamen del Grupo de Expertos sobre los resultados y el Informe de la Etapa'),
+                      ('mnig', 'Anexo 16 Modelo de Notificación de Ingresos/Gastos'),
+                      ('bcpr', 'Base de cálculo para el pago por remuneración'),
+                      ('acpp', 'Acta de conformidad de los participantes del proyecto'),
+                      ('cpr', 'Certificación para el pago de la remuneración'),
+                      ('cpie', 'Anexo 8. Certifico para el pago de los investigadores externos')]
 
     dtype = models.CharField(max_length=512, choices=DOCUMENT_TYPES, default='other')
 
@@ -202,4 +202,5 @@ class GroupDocument(models.Model):
     date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
-        return self.group.name  + '_' + str(self.date) if self.group.dtype == 'other' else self.group.get_dtype_display() + '_' + str(self.date)
+        return self.group.name + '_' + str(
+            self.date) if self.group.dtype == 'other' else self.group.get_dtype_display() + '_' + str(self.date)
