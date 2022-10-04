@@ -105,6 +105,14 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = '__all__'
 
+    def validate(self, attrs):
+        if attrs['start_date'] > attrs['end_date']:
+            raise serializers.ValidationError(
+                {"start_date": "The start date must be less than the end date."}
+            )
+
+        return attrs
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
@@ -307,6 +315,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
+
         return token
 
     def validate(self, attrs):
@@ -315,4 +324,5 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["refresh"] = str(refresh)
         data["access"] = str(refresh.access_token)
         data["user"] = {"username": self.user.username}
+        data['groups'] = {self.user.groups.values_list('name', flat=True)}
         return data

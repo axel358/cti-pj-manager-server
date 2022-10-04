@@ -104,14 +104,6 @@ class Project(models.Model):
     end_date = models.DateField(default=datetime.date.today)
     financing = models.PositiveBigIntegerField(default=0)
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super(Project, self).save(*args, **kwargs)
-
-    def clean_fields(self, exclude=None):
-        if self.end_date < self.start_date:
-            raise ValidationError('The start date must be less than the end date.')
-
     def __str__(self):
         return self.name
 
