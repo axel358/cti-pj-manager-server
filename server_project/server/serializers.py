@@ -17,6 +17,12 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectDocument
         fields = '__all__'
+        
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['d_name'] = instance.name if instance.dtype == 'other' else instance.get_dtype_display()
+        return response
+        
 
 
 class ProgramDocumentSerializer(serializers.ModelSerializer):
@@ -102,16 +108,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
+        response['type'] = instance.get_pj_type_display()
+        response['classification'] = instance.get_project_classification_display()
         return response
-
-    def get_fields(self, *args, **kargs):
-        self.document_groups = ProjectDocumentSerializer(read_only=True)
-        fields = super().get_fields(*args, **kargs)
-        if self.context.get('limited'):
-            # fields.pop('documents')
-            fields.pop('document_groups')
-
-        return fields
 
     def create(self, validated_data):
         print(validated_data)

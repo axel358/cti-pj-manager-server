@@ -18,6 +18,9 @@ class Chief(User):
 
     class Meta:
         verbose_name = 'Chief'
+        
+    def __str__(self):
+        return self.name
 
 
 class Program(models.Model):
