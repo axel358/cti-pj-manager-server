@@ -49,14 +49,6 @@ class Program(models.Model):
     money = models.BigIntegerField(null=True, blank=True)
     user_clients = models.TextField(null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super(Program, self).save(*args, **kwargs)
-
-    def clean_fields(self, exclude=None):
-        if self.end_date < self.start_date:
-            raise ValidationError('The start date must be less than the end date.')
-
     def __str__(self):
         return self.name
 
