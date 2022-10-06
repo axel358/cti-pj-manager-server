@@ -17,12 +17,11 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectDocument
         fields = '__all__'
-        
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['d_name'] = instance.name if instance.dtype == 'other' else instance.get_dtype_display()
         return response
-        
 
 
 class ProgramDocumentSerializer(serializers.ModelSerializer):
@@ -80,6 +79,14 @@ class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
         fields = '__all__'
+
+    def validate(self, attrs):
+        if attrs['start_date'] > attrs['end_date']:
+            raise serializers.ValidationError(
+                {"start_date": "The start date must be less than the end date."}
+            )
+
+        return attrs
 
     def create(self, validated_data):
         chief = validated_data["chief"]
