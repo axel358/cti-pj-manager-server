@@ -65,7 +65,13 @@ class ProgramSimpleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Program
-        fields = ['id', 'name', 'ptype', 'program_code', 'projects_details']
+        fields = ['id', 'name', 'ptype', 'chief', 'end_date', 'projects_details']
+    
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
+        response['classification'] = instance.get_ptype_display()
+        return response
 
 
 class ProgramSerializer(serializers.ModelSerializer):
@@ -94,6 +100,12 @@ class ProgramSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
+        
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
+        response['type'] = instance.get_ptype_display()
+        return response
 
 
 class ProjectSerializer(serializers.ModelSerializer):
