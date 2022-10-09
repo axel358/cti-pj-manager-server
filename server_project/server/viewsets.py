@@ -3,6 +3,7 @@ from rest_framework.permissions import *
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenVerifyView, TokenObtainPairView
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from .serializers import *
 from .permissions import *
@@ -117,3 +118,4 @@ class MembersViewSet(viewsets.ModelViewSet):
 class ProjectDocumentViewSet(viewsets.ModelViewSet):
     queryset = ProjectDocument.objects.all()
     serializer_class = ProjectDocumentSerializer
+    parser_classes = (MultiPartParser, FormParser)
