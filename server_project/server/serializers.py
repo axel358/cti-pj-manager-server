@@ -18,6 +18,13 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
         model = ProjectDocument
         fields = '__all__'
 
+    def validate(self, attrs):
+        if ProjectDocument.objects.filter(project=attrs['project']).filter(name=attrs['name']).exists():
+            raise serializers.ValidationError(
+                {"exist": "This document already exists "}
+            )
+        return attrs
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['d_name'] = instance.name if instance.dtype == 'other' else instance.get_dtype_display()
@@ -65,7 +72,7 @@ class ProgramSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
         fields = ['id', 'name', 'ptype', 'chief', 'end_date', 'projects_details']
-    
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
@@ -107,7 +114,7 @@ class ProgramSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
-        
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
