@@ -42,6 +42,12 @@ class GroupDocumentSerializer(serializers.ModelSerializer):
         model = GroupDocument
         fields = '__all__'
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['d_name'] = instance.group.name + '_' + str(
+            instance.date) if instance.group.dtype == 'other' else instance.group.get_dtype_display() + '_' + str(instance.date)
+        return response
+
 
 class DocumentGroupSerializer(serializers.ModelSerializer):
     documents = GroupDocumentSerializer(read_only=True, many=True)
@@ -49,6 +55,11 @@ class DocumentGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentGroup
         fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['d_name'] = instance.name if instance.dtype == 'other' else instance.get_dtype_display()
+        return response
 
 
 class ProjectSimpleSerializer(serializers.ModelSerializer):
