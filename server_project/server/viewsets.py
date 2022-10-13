@@ -119,3 +119,8 @@ class ProjectDocumentViewSet(viewsets.ModelViewSet):
     queryset = ProjectDocument.objects.all()
     serializer_class = ProjectDocumentSerializer
     parser_classes = (MultiPartParser, FormParser)
+
+class GroupDocumentViewSet(viewsets.ModelViewSet):
+    queryset = GroupDocument.objects.all()
+    serializer_class = GroupDocumentSerializer
+    parser_classes = (MultiPartParser, FormParser)

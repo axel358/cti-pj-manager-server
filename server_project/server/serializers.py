@@ -158,9 +158,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         return response
 
     def create(self, validated_data):
-        print(validated_data)
         chief = validated_data['chief']
-        print(chief)
         group, created = Group.objects.get_or_create(name='project_chiefs')
         group.user_set.add(chief)
         return Project.objects.create(**validated_data)
