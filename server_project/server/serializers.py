@@ -30,15 +30,18 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
         response['d_name'] = instance.name if instance.dtype == 'other' else instance.get_dtype_display()
         return response
 
+
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = '__all__'
 
+
 class ProgramDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgramDocument
         fields = '__all__'
+
 
 class GroupDocumentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,7 +51,8 @@ class GroupDocumentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['d_name'] = instance.group.name + '_' + str(
-            instance.date) if instance.group.dtype == 'other' else instance.group.get_dtype_display() + '_' + str(instance.date)
+            instance.date) if instance.group.dtype == 'other' else instance.group.get_dtype_display() + '_' + str(
+            instance.date)
         return response
 
 
@@ -344,6 +348,11 @@ class UsersListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chief
         fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['name'] = instance.first_name + ' ' + instance.last_name
+        return response
 
 
 class MyTokenVerifySerializer(TokenVerifySerializer):
