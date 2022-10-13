@@ -8,14 +8,16 @@ from .views import (
     LogoutAllView, UsersListView,UserDetailsView
 )
 from .viewsets import ProgramViewSet, ProjectViewSet, MembersViewSet, ProjectDocumentViewSet, MyTokenVerifyView, \
-    MyTokenObtainPairView
+    MyTokenObtainPairView, GroupDocumentViewSet, DocumentViewSet
 from rest_framework_simplejwt.views import TokenRefreshView
 
 router = routers.DefaultRouter()
 router.register(r"projects", ProjectViewSet)
 router.register(r"programs", ProgramViewSet)
 router.register(r"members", MembersViewSet)
+router.register(r"documents", DocumentViewSet)
 router.register(r"projectdocuments", ProjectDocumentViewSet)
+router.register(r"groupdocuments", GroupDocumentViewSet)
 app_name = "server"
 
 urlpatterns = [

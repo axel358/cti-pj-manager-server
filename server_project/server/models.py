@@ -109,6 +109,15 @@ class Member(models.Model):
     def __str__(self):
         return self.name
 
+class Document(models.Model):
+
+    file = models.FileField(upload_to=os.path.join('Documentación'), max_length=256)
+    name = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 
 class ProjectDocument(models.Model):
 

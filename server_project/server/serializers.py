@@ -30,12 +30,15 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
         response['d_name'] = instance.name if instance.dtype == 'other' else instance.get_dtype_display()
         return response
 
+class DocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = '__all__'
 
 class ProgramDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgramDocument
         fields = '__all__'
-
 
 class GroupDocumentSerializer(serializers.ModelSerializer):
     class Meta:
