@@ -156,7 +156,10 @@ class ProjectSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
+        response['chief_id'] = instance.chief.id
         response['type'] = instance.get_pj_type_display()
+        if instance.program is not None:
+            response['program_name'] = instance.program.name
         response['classification'] = instance.get_project_classification_display()
         return response
 
