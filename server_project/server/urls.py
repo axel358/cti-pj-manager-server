@@ -5,10 +5,10 @@ from .views import (
     RegisterView,
     ChangePasswordView,
     UpdateProfileView,
-    LogoutAllView, UsersListView,UserDetailsView
+    LogoutAllView, UsersListView, UserDetailsView
 )
 from .viewsets import ProgramViewSet, ProjectViewSet, MembersViewSet, ProjectDocumentViewSet, MyTokenVerifyView, \
-    MyTokenObtainPairView, GroupDocumentViewSet, DocumentViewSet
+    MyTokenObtainPairView, GroupDocumentViewSet, DocumentViewSet, DocumentGroupViewSet
 from rest_framework_simplejwt.views import TokenRefreshView
 
 router = routers.DefaultRouter()
@@ -18,6 +18,7 @@ router.register(r"members", MembersViewSet)
 router.register(r"documents", DocumentViewSet)
 router.register(r"projectdocuments", ProjectDocumentViewSet)
 router.register(r"groupdocuments", GroupDocumentViewSet)
+router.register(r"documentgroups", DocumentGroupViewSet)
 app_name = "server"
 
 urlpatterns = [

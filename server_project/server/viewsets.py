@@ -119,12 +119,26 @@ class DocumentViewSet(viewsets.ModelViewSet):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
 
+
 class ProjectDocumentViewSet(viewsets.ModelViewSet):
     queryset = ProjectDocument.objects.all()
     serializer_class = ProjectDocumentSerializer
     parser_classes = (MultiPartParser, FormParser)
 
+
 class GroupDocumentViewSet(viewsets.ModelViewSet):
     queryset = GroupDocument.objects.all()
     serializer_class = GroupDocumentSerializer
     parser_classes = (MultiPartParser, FormParser)
+
+
+class DocumentGroupViewSet(viewsets.ModelViewSet):
+    queryset = DocumentGroup.objects.all()
+    serializer_class = DocumentGroupSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = DocumentGroup.objects.all()
+        serializer = DocumentGroupSerializer(
+            queryset.filter(dtype=request.headers["Name"]).filter(project=request.headers["Project"]), many=True)
+        return Response(serializer.data)
+
