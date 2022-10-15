@@ -387,4 +387,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["access"] = str(refresh.access_token)
         data["user"] = {"username": self.user.username}
         data['groups'] = {self.user.groups.values_list('name', flat=True)}
+        data['email'] = {"email": self.user.email}
+
         return data
