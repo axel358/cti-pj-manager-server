@@ -163,4 +163,5 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
     "name",
     "project",
+    "classification"
 ]

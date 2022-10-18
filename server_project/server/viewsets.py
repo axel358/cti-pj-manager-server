@@ -56,9 +56,18 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = Project.objects.all()
         if IsProjectChief().has_permission(self.request, self):
-            serializer = ProjectSimpleSerializer(queryset.filter(chief=request.user.id), many=True)
+            if request.headers["classification"] == 'pnap':
+                serializer = ProjectSimpleSerializer(
+                    queryset.filter(chief=request.user.id).filter(program=None), many=True)
+            else:
+                serializer = ProjectSimpleSerializer(
+                    queryset.filter(chief=request.user.id).filter(pj_type=request.headers["classification"]), many=True)
         else:
-            serializer = ProjectSimpleSerializer(queryset, many=True)
+            if request.headers["classification"] == 'pnap':
+                serializer = ProjectSimpleSerializer(queryset.filter(program=None), many=True)
+            else:
+                serializer = ProjectSimpleSerializer(queryset.filter(pj_type=request.headers["classification"]), many=True)
+
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
@@ -141,4 +150,3 @@ class DocumentGroupViewSet(viewsets.ModelViewSet):
         serializer = DocumentGroupSerializer(
             queryset.filter(dtype=request.headers["Name"]).filter(project=request.headers["Project"]), many=True)
         return Response(serializer.data)
-
