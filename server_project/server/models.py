@@ -98,9 +98,9 @@ class Project(models.Model):
 
 
 class Member(models.Model):
-    name = models.TextField()
+    name = models.CharField(max_length=254)
     email = models.EmailField(max_length=254)
-    c_id = models.TextField(max_length=11)
+    c_id = models.CharField(max_length=11)
     organization = models.CharField(max_length=500, default='')
     projects = models.ManyToManyField(Project, related_name='members')
 
