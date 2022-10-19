@@ -102,9 +102,7 @@ class Member(models.Model):
     email = models.EmailField(max_length=254)
     c_id = models.TextField(max_length=11)
     organization = models.CharField(max_length=500, default='')
-    project = models.ForeignKey(Project,
-                                on_delete=models.CASCADE,
-                                related_name='members')
+    projects = models.ManyToManyField(Project, related_name='members')
 
     def __str__(self):
         return self.name
