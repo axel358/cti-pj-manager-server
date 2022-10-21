@@ -364,6 +364,7 @@ class UsersListSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['name'] = instance.first_name + ' ' + instance.last_name
+        response['type'] = instance.get_chief_type_display()
         return response
 
 

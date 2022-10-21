@@ -102,7 +102,7 @@ class Member(models.Model):
     email = models.EmailField(max_length=254)
     c_id = models.CharField(max_length=11)
     organization = models.CharField(max_length=500, default='')
-    projects = models.ManyToManyField(Project, related_name='members')
+    projects = models.ManyToManyField(Project, related_name='members', blank=True)
 
     def __str__(self):
         return self.name
