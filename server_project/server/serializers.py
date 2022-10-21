@@ -12,6 +12,11 @@ class MembersSerializer(serializers.ModelSerializer):
         model = Member
         fields = '__all__'
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['type'] = instance.get_m_type_display()
+        return response
+
 
 class ProjectDocumentSerializer(serializers.ModelSerializer):
     class Meta:

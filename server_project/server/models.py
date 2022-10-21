@@ -98,11 +98,16 @@ class Project(models.Model):
 
 
 class Member(models.Model):
+    M_TYPES = [
+        ('in', 'Interno'),
+        ('out', 'Externo')
+    ]
     name = models.CharField(max_length=254)
     email = models.EmailField(max_length=254)
     c_id = models.CharField(max_length=11)
     organization = models.CharField(max_length=500, default='')
     projects = models.ManyToManyField(Project, related_name='members', blank=True)
+    m_type = models.TextField(max_length=255, choices=M_TYPES, default='in')
 
     def __str__(self):
         return self.name
