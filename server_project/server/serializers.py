@@ -191,17 +191,31 @@ class ProjectSerializer(serializers.ModelSerializer):
         return Project.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
+        instance.members.clear()
         if instance.chief != validated_data['chief']:
             group, created = Group.objects.get_or_create(name='project_chiefs')
             is_have_more_projects = Project.objects.exclude(id=instance.id).filter(chief=instance.chief.id).exists()
             if not is_have_more_projects:
                 group.user_set.remove(instance.chief)
             group.user_set.add(validated_data['chief'])
+        for v in validated_data['members']:
+            memb = Member.objects.get(id=v.get('id'))
+            instance.members.add(memb)
 
         for attr, value in validated_data.items():
+            if attr == 'members':
+                continue
             setattr(instance, attr, value)
         instance.save()
         return instance
+
+    def to_internal_value(self, data):
+        internal_value = super(ProjectSerializer, self).to_internal_value(data)
+        members_raw_value = data.get('members')
+        internal_value.update({
+            'members': members_raw_value
+        })
+        return internal_value
 
 
 class RegisterSerializer(serializers.ModelSerializer):
