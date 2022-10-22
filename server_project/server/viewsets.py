@@ -66,7 +66,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
             if request.headers["classification"] == 'pnap':
                 serializer = ProjectSimpleSerializer(queryset.filter(program=None), many=True)
             else:
-                serializer = ProjectSimpleSerializer(queryset.filter(pj_type=request.headers["classification"]), many=True)
+                serializer = ProjectSimpleSerializer(queryset.filter(pj_type=request.headers["classification"]),
+                                                     many=True)
 
         return Response(serializer.data)
 
@@ -139,6 +140,16 @@ class GroupDocumentViewSet(viewsets.ModelViewSet):
     queryset = GroupDocument.objects.all()
     serializer_class = GroupDocumentSerializer
     parser_classes = (MultiPartParser, FormParser)
+
+    def destroy(self, request, *args, **kwargs):
+        group_document = self.get_object()
+        document_group = DocumentGroup.objects.get(id=group_document.group.id)
+        if len(document_group.documents.values_list(flat=False)) == 1:
+            self.perform_destroy(group_document)
+            document_group.delete()
+        else:
+            self.perform_destroy(group_document)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class DocumentGroupViewSet(viewsets.ModelViewSet):
