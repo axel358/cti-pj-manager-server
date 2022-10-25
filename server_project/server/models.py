@@ -15,6 +15,7 @@ class Chief(User):
 
     ]
     chief_type = models.TextField(max_length=255, choices=USERS_ROLES, default='human_resources')
+    c_id = models.CharField(max_length=11, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Chief'
@@ -24,30 +25,33 @@ class Program(models.Model):
     PROGRAM_TYPES = [('nac', 'Nacional'),
                      ('sec', 'Sectorial'),
                      ('ter', 'Territorial')]
+
+    STRATEGICS_SECTORS = [('tur', 'Turismo'),
+                          ('ind_biofarm', 'Industria boitecnológica y farmacéutica'),
+                          ('elec', 'Electroenergético'),
+                          ('pro_alim', 'Producción de alimentos'),
+                          ('constr', 'Construcciones'),
+                          ('tele_inf', 'Telecomunicaciones e Informática'),
+                          ('log_trans', 'Logística y transporte'),
+                          ('hidro_sanit', 'Redes hidráulicas y sanitarias'),
+                          ('agro_azucar', 'Agroindustria azucarera'),
+                          ('ind_ligera', 'Industria ligera'),
+                          ('ser_tecprof', 'Servicios técnicos profesionales')]
     name = models.CharField(max_length=512)
     program_code = models.CharField(max_length=10, default="0")
     chief = models.OneToOneField(Chief,
                                  on_delete=models.CASCADE,
                                  related_name='program',
                                  null=True, blank=True)
-    priority = models.TextField(null=True, blank=True)
-    reason = models.TextField(null=True, blank=True)
     ptype = models.TextField(choices=PROGRAM_TYPES, default='nac')
-    general_goals = models.TextField(null=True, blank=True)
-    specific_goals = models.TextField(null=True, blank=True)
-    main_results = models.TextField(null=True, blank=True)
-    indicators = models.TextField(null=True, blank=True)
-    expected_results = models.TextField(null=True, blank=True)
+    strategics_sectors = models.TextField(choices=STRATEGICS_SECTORS, default='tur')
     entities = models.TextField(null=True, blank=True)
-    infrastructure = models.TextField(null=True, blank=True)
     main_entity = models.TextField(null=True, blank=True)
     secretary = models.TextField(null=True, blank=True)
-    experts_group = models.TextField(null=True, blank=True)
     start_date = models.DateField(default=datetime.date.today)
     end_date = models.DateField(default=datetime.date.today)
     pj_amount = models.IntegerField(null=True, blank=True)
     money = models.BigIntegerField(null=True, blank=True)
-    user_clients = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -80,12 +84,24 @@ class Project(models.Model):
         ('i_d', 'Aplicada y de Desarrollo'),
         ('inn', 'Innovación')
     ]
+    STRATEGICS_SECTORS = [('tur', 'Turismo'),
+                          ('ind_biofarm', 'Industria boitecnológica y farmacéutica'),
+                          ('elec', 'Electroenergético'),
+                          ('pro_alim', 'Producción de alimentos'),
+                          ('constr', 'Construcciones'),
+                          ('tele_inf', 'Telecomunicaciones e Informática'),
+                          ('log_trans', 'Logística y transporte'),
+                          ('hidro_sanit', 'Redes hidráulicas y sanitarias'),
+                          ('agro_azucar', 'Agroindustria azucarera'),
+                          ('ind_ligera', 'Industria ligera'),
+                          ('ser_tecprof', 'Servicios técnicos profesionales')]
     name = models.CharField(max_length=255)
     project_code = models.CharField(max_length=10, default="0")
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='projects', null=True, blank=True)
     program_code = models.CharField(max_length=10, default="0", null=True, blank=True)
     project_classification = models.TextField(max_length=255, choices=PROJECTS_CLASS_OPTIONS, default='i_bas')
     pj_type = models.TextField(max_length=255, choices=PROJECTS_TYPES, default='papt')
+    strategics_sectors = models.TextField(choices=STRATEGICS_SECTORS, default='tur')
     main_entity = models.CharField(max_length=255)
     entities = models.TextField()
     chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='projects')
@@ -100,7 +116,8 @@ class Project(models.Model):
 class Member(models.Model):
     M_TYPES = [
         ('in', 'Interno'),
-        ('out', 'Externo')
+        ('out', 'Externo'),
+        ('stdnt', 'Estudiante')
     ]
     name = models.CharField(max_length=254)
     email = models.EmailField(max_length=254)

@@ -242,6 +242,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "chief_type",
+            "c_id",
         )
         extra_kwargs = {
             "username": {"required": True},
@@ -251,6 +252,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             "last_name": {"required": True},
             "email": {"required": True},
             "chief_type": {"required": True},
+            "c_id": {"required": False},
         }
 
     def validate(self, attrs):
@@ -268,6 +270,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             last_name=validated_data["last_name"],
             email=validated_data["email"],
             chief_type=validated_data["chief_type"],
+            c_id=validated_data["c_id"],
         )
         user.set_password(validated_data["password"])
         if user.chief_type != 'project_program_both_chief':
@@ -330,6 +333,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "chief_type",
+            "c_id",
         )
         extra_kwargs = {
             "username": {"required": True},
@@ -337,6 +341,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             "last_name": {"required": True},
             "email": {"required": True},
             "chief_type": {"required": True},
+            "c_id": {"required": False},
 
         }
 
@@ -366,6 +371,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.last_name = validated_data["last_name"]
         instance.email = validated_data["email"]
         instance.chief_type = validated_data["chief_type"]
+        instance.c_id = validated_data["c_id"]
 
         instance.save()
         if instance.chief_type != 'project_program_both_chief':
