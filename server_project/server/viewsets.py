@@ -56,14 +56,19 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = Project.objects.all()
         if IsProjectChief().has_permission(self.request, self):
-            if request.headers["classification"] == 'pnap':
+            if request.headers["classification"] == 'all':
+                serializer = ProjectSimpleSerializer(
+                    queryset.filter(chief=request.user.id), many=True)
+            elif request.headers["classification"] == 'pnap':
                 serializer = ProjectSimpleSerializer(
                     queryset.filter(chief=request.user.id).filter(program=None), many=True)
             else:
                 serializer = ProjectSimpleSerializer(
                     queryset.filter(chief=request.user.id).filter(pj_type=request.headers["classification"]), many=True)
         else:
-            if request.headers["classification"] == 'pnap':
+            if request.headers["classification"] == 'all':
+                serializer = ProjectSimpleSerializer(queryset, many=True)
+            elif request.headers["classification"] == 'pnap':
                 serializer = ProjectSimpleSerializer(queryset.filter(program=None), many=True)
             else:
                 serializer = ProjectSimpleSerializer(queryset.filter(pj_type=request.headers["classification"]),
