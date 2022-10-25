@@ -1,9 +1,13 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, renderers
 from rest_framework.permissions import *
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenVerifyView, TokenObtainPairView
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import action
+from django.http import FileResponse, HttpResponse
+from wsgiref.util import FileWrapper
+import mimetypes
 
 from .serializers import *
 from .permissions import *
@@ -130,9 +134,35 @@ class MembersViewSet(viewsets.ModelViewSet):
     serializer_class = MembersSerializer
 
 
+class PassthroughRenderer(renderers.BaseRenderer):
+    """
+        Return data as-is. View should supply a Response.
+    """
+    media_type = ''
+    format = ''
+
+    def render(self, data, accepted_media_type=None, renderer_context=None):
+        return data
+
+
 class DocumentViewSet(viewsets.ModelViewSet):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
+
+    @action(methods=['get'], detail=True)
+    def download(self, *args, **kwargs):
+        instance = self.get_object()
+
+        file_handle = instance.file.open()
+
+        # send file
+        mimetype, _ = mimetypes.guess_type(instance.file.path)
+        response = FileResponse(file_handle, content_type=mimetype)
+        #response = HttpResponse( FileWrapper(file_handle), content_type='*')
+        response['Content-Length'] = instance.file.size
+        response['Content-Disposition'] = 'attachment; filename="%s"' % instance.file.name
+
+        return response
 
 
 class ProjectDocumentViewSet(viewsets.ModelViewSet):
