@@ -32,6 +32,7 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
+        response['file'] = instance.file.name
         response['d_name'] = instance.name if instance.dtype == 'other' else instance.get_dtype_display()
         return response
 
@@ -40,6 +41,11 @@ class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['file'] = instance.file.name
+        return response
 
 
 class ProgramDocumentSerializer(serializers.ModelSerializer):
@@ -69,9 +75,6 @@ class DocumentGroupSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        print(validated_data["project"])
-        print(validated_data["dtype"])
-        print(validated_data["name"])
         group = DocumentGroup.objects.create(
             name=validated_data["name"],
             project=validated_data["project"],

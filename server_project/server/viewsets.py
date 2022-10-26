@@ -134,47 +134,34 @@ class MembersViewSet(viewsets.ModelViewSet):
     serializer_class = MembersSerializer
 
 
-class PassthroughRenderer(renderers.BaseRenderer):
-    """
-        Return data as-is. View should supply a Response.
-    """
-    media_type = ''
-    format = ''
-
-    def render(self, data, accepted_media_type=None, renderer_context=None):
-        return data
-
-
 class DocumentViewSet(viewsets.ModelViewSet):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     @action(methods=['get'], detail=True)
     def download(self, *args, **kwargs):
         instance = self.get_object()
 
         file_handle = instance.file.open()
+        print(instance.file.name)
 
-        # send file
         mimetype, _ = mimetypes.guess_type(instance.file.path)
         response = FileResponse(file_handle, content_type=mimetype)
-        #response = HttpResponse( FileWrapper(file_handle), content_type='*')
         response['Content-Length'] = instance.file.size
         response['Content-Disposition'] = 'attachment; filename="%s"' % instance.file.name
 
         return response
 
 
-class ProjectDocumentViewSet(viewsets.ModelViewSet):
+class ProjectDocumentViewSet(DocumentViewSet):
     queryset = ProjectDocument.objects.all()
     serializer_class = ProjectDocumentSerializer
-    parser_classes = (MultiPartParser, FormParser)
 
 
-class GroupDocumentViewSet(viewsets.ModelViewSet):
+class GroupDocumentViewSet(DocumentViewSet):
     queryset = GroupDocument.objects.all()
     serializer_class = GroupDocumentSerializer
-    parser_classes = (MultiPartParser, FormParser)
 
     def destroy(self, request, *args, **kwargs):
         group_document = self.get_object()
