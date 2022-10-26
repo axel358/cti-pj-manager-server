@@ -25,18 +25,6 @@ class Program(models.Model):
     PROGRAM_TYPES = [('nac', 'Nacional'),
                      ('sec', 'Sectorial'),
                      ('ter', 'Territorial')]
-
-    STRATEGICS_SECTORS = [('tur', 'Turismo'),
-                          ('ind_biofarm', 'Industria boitecnológica y farmacéutica'),
-                          ('elec', 'Electroenergético'),
-                          ('pro_alim', 'Producción de alimentos'),
-                          ('constr', 'Construcciones'),
-                          ('tele_inf', 'Telecomunicaciones e Informática'),
-                          ('log_trans', 'Logística y transporte'),
-                          ('hidro_sanit', 'Redes hidráulicas y sanitarias'),
-                          ('agro_azucar', 'Agroindustria azucarera'),
-                          ('ind_ligera', 'Industria ligera'),
-                          ('ser_tecprof', 'Servicios técnicos profesionales')]
     name = models.CharField(max_length=512)
     program_code = models.CharField(max_length=10, default="0")
     chief = models.OneToOneField(Chief,
@@ -44,7 +32,7 @@ class Program(models.Model):
                                  related_name='program',
                                  null=True, blank=True)
     ptype = models.TextField(choices=PROGRAM_TYPES, default='nac')
-    strategics_sectors = models.TextField(choices=STRATEGICS_SECTORS, default='tur')
+    strategics_sectors = models.TextField(null=True, blank=True)
     entities = models.TextField(null=True, blank=True)
     main_entity = models.TextField(null=True, blank=True)
     secretary = models.TextField(null=True, blank=True)
@@ -84,30 +72,20 @@ class Project(models.Model):
         ('i_d', 'Aplicada y de Desarrollo'),
         ('inn', 'Innovación')
     ]
-    STRATEGICS_SECTORS = [('tur', 'Turismo'),
-                          ('ind_biofarm', 'Industria boitecnológica y farmacéutica'),
-                          ('elec', 'Electroenergético'),
-                          ('pro_alim', 'Producción de alimentos'),
-                          ('constr', 'Construcciones'),
-                          ('tele_inf', 'Telecomunicaciones e Informática'),
-                          ('log_trans', 'Logística y transporte'),
-                          ('hidro_sanit', 'Redes hidráulicas y sanitarias'),
-                          ('agro_azucar', 'Agroindustria azucarera'),
-                          ('ind_ligera', 'Industria ligera'),
-                          ('ser_tecprof', 'Servicios técnicos profesionales')]
     name = models.CharField(max_length=255)
     project_code = models.CharField(max_length=10, default="0")
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='projects', null=True, blank=True)
     program_code = models.CharField(max_length=10, default="0", null=True, blank=True)
     project_classification = models.TextField(max_length=255, choices=PROJECTS_CLASS_OPTIONS, default='i_bas')
     pj_type = models.TextField(max_length=255, choices=PROJECTS_TYPES, default='papt')
-    strategics_sectors = models.TextField(choices=STRATEGICS_SECTORS, default='tur')
+    strategics_sectors = models.TextField(null=True, blank=True)
     main_entity = models.CharField(max_length=255)
     entities = models.TextField()
     chief = models.ForeignKey(Chief, on_delete=models.CASCADE, related_name='projects')
     start_date = models.DateField(default=datetime.date.today)
     end_date = models.DateField(default=datetime.date.today)
     financing = models.PositiveBigIntegerField(default=0)
+    notes = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
