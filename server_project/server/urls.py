@@ -5,6 +5,7 @@ from .views import (
     RegisterView,
     ChangePasswordView,
     UpdateUserView,
+    UsersDeleteView,
     LogoutAllView, UsersListView, UserDetailsView
 )
 from .viewsets import ProgramViewSet, ProjectViewSet, MembersViewSet, ProjectDocumentViewSet, MyTokenVerifyView, \
@@ -31,6 +32,11 @@ urlpatterns = [
         "change_password/<int:pk>/",
         ChangePasswordView.as_view(),
         name="user_change_password",
+    ),
+    path(
+        "delete_user/<int:pk>/",
+        UsersDeleteView.as_view(),
+        name="delete_user",
     ),
     path(
         "update_user/<int:pk>/",
