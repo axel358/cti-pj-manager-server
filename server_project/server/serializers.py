@@ -96,7 +96,7 @@ class ProjectSimpleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'chief', 'end_date', 'project_classification', 'pj_type']
+        fields = ['id', 'name', 'chief', 'end_date', 'project_classification', 'pj_type', 'strategics_sectors']
 
     def get_chief(self, obj):
         return obj.chief.first_name + ' ' + obj.chief.last_name
