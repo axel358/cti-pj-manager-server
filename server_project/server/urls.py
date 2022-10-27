@@ -4,7 +4,7 @@ from rest_framework import routers
 from .views import (
     RegisterView,
     ChangePasswordView,
-    UpdateProfileView,
+    UpdateUserView,
     LogoutAllView, UsersListView, UserDetailsView
 )
 from .viewsets import ProgramViewSet, ProjectViewSet, MembersViewSet, ProjectDocumentViewSet, MyTokenVerifyView, \
@@ -33,9 +33,9 @@ urlpatterns = [
         name="user_change_password",
     ),
     path(
-        "update_profile/<int:pk>/",
-        UpdateProfileView.as_view(),
-        name="auth_update_profile",
+        "update_user/<int:pk>/",
+        UpdateUserView.as_view(),
+        name="update_user",
     ),
     path(
         "users/",

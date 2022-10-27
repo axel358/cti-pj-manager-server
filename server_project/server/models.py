@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 class Chief(User):
     USERS_ROLES = [
-        ('project_program_both_chief', 'Jefe de Proyecto/ Programa / Ambos'),
+        ('project_program_both_chief', 'Jefe de Proyecto/ Programa'),
         ('human_resources', 'Recursos Humanos'),
         ('economy', 'Economia'),
         ('vicedec_inv_postgr', 'Vicedecano de Investigacion y Postgrado')

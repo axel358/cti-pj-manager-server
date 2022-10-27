@@ -27,7 +27,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
 
 
-class UpdateProfileView(generics.RetrieveUpdateAPIView):
+class UpdateUserView(generics.RetrieveUpdateAPIView):
     queryset = Chief.objects.all()
     permission_classes = (IsAdminUser,)
     serializer_class = UpdateUserSerializer
