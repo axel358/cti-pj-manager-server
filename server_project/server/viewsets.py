@@ -144,7 +144,6 @@ class DocumentViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
 
         file_handle = instance.file.open()
-        print(instance.file.name)
 
         mimetype, _ = mimetypes.guess_type(instance.file.path)
         response = FileResponse(file_handle, content_type=mimetype)
@@ -152,6 +151,13 @@ class DocumentViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="%s"' % instance.file.name
 
         return response
+        
+    def destroy(self, request, *args, **kwargs):
+        document = self.get_object()
+        if document.file is not None:
+            document.file.delete()
+        self.perform_destroy(document)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ProjectDocumentViewSet(DocumentViewSet):
