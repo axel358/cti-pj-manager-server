@@ -24,7 +24,7 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, attrs):
-        if ProjectDocument.objects.filter(project=attrs['project']).filter(name=attrs['name']).exists():
+        if ProjectDocument.objects.filter(project=attrs['project']).filter(dtype=attrs['dtype']).exists():
             raise serializers.ValidationError(
                 {"exist": "This document already exists "}
             )
