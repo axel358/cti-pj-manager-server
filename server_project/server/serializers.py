@@ -159,6 +159,11 @@ class ProgramSerializer(serializers.ModelSerializer):
         response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
         response['chief_email'] = instance.chief.email
         response['type'] = instance.get_ptype_display()
+        response['sectors'] = []
+        if len(instance.strategics_sectors) != 0:
+            for i in instance.strategics_sectors.split(','):
+                response['sectors'].append({"id": i, "value": i})
+        response['pj_amount'] = len(Project.objects.filter(program=instance.id))
         return response
 
 

@@ -38,7 +38,6 @@ class Program(models.Model):
     secretary = models.TextField(null=True, blank=True)
     start_date = models.DateField(default=datetime.date.today)
     end_date = models.DateField(default=datetime.date.today)
-    pj_amount = models.IntegerField(null=True, blank=True)
     money = models.BigIntegerField(null=True, blank=True)
 
     def __str__(self):
