@@ -192,8 +192,20 @@ class ProgramDocument(models.Model):
     file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='documents', null=True)
 
+    DOCUMENT_TYPES = [('other', 'Otro'),
+                      ('profile', 'Perfil'),
+                      ('contract', 'Contract'),
+                      ('rsjf', 'Resolución de nombramiento del jefe de proyecto'),
+                      ('cidef', 'Compatibilización con los intereses de la Defensa'),
+                      ('roap', 'Resolución oficial de aprobación del proyecto'),
+                      ('dapcca', 'Dictamen de aprobación del proyecto por el CCA'),
+                      ('dpddp', 'Documentos de planificación del diseño y desarrollo del producto'),
+                      ('csbie', 'Certifico del salario básico de los investigadores externos'),
+                      ('fciie', 'Fotos escaneadas del carné de identidad de los investigadores')]
+    dtype = models.CharField(max_length=512, choices=DOCUMENT_TYPES, default='other')
+
     def __str__(self):
-        return self.name
+        return self.name if self.dtype == 'other' else self.get_dtype_display()
 
 
 class ProgramDocumentGroup(models.Model):

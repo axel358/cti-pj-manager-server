@@ -53,6 +53,12 @@ class ProgramDocumentSerializer(serializers.ModelSerializer):
         model = ProgramDocument
         fields = '__all__'
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['file'] = instance.file.name
+        response['d_name'] = instance.name if instance.dtype == 'other' else instance.get_dtype_display()
+        return response
+
 
 class GroupDocumentSerializer(serializers.ModelSerializer):
     class Meta:
