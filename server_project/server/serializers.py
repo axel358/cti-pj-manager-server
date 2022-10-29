@@ -192,7 +192,7 @@ class ProgramSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
+        response['chief_name'] = instance.chief.first_name + ' ' + instance.chief.last_name
         response['chief_email'] = instance.chief.email
         response['type'] = instance.get_ptype_display()
         response['sectors'] = []
