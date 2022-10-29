@@ -108,9 +108,18 @@ class ProgramViewSet(viewsets.ModelViewSet):
         queryset = Program.objects.all()
         serializer = ProgramSimpleSerializer(queryset, many=True)
         if IsAdminUser().has_permission(self.request, self):
-            serializer = ProgramSimpleSerializer(queryset, many=True)
+            if request.headers["program-classification"] == 'all':
+                serializer = ProgramSimpleSerializer(queryset, many=True)
+            else:
+                serializer = ProgramSimpleSerializer(queryset.filter(ptype=request.headers["program-classification"]),
+                                                     many=True)
         else:
-            serializer = ProgramSimpleSerializer(queryset.filter(chief=request.user.id), many=True)
+            if request.headers["program-classification"] == 'all':
+                serializer = ProgramSimpleSerializer(queryset.filter(chief=request.user.id), many=True)
+            else:
+                serializer = ProgramSimpleSerializer(
+                    queryset.filter(chief=request.user.id).filter(ptype=request.headers["program-classification"]),
+                    many=True)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
