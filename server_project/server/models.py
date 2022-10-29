@@ -44,18 +44,6 @@ class Program(models.Model):
         return self.name
 
 
-class ProgramDocument(models.Model):
-
-    def get_upload_folder(self, filename):
-        return os.path.join('Programas', self.program.name, filename)
-
-    name = models.CharField(max_length=255)
-    file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='documents', null=True)
-
-    def __str__(self):
-        return self.name
-
 
 class Project(models.Model):
     PROJECTS_TYPES = [
@@ -184,6 +172,65 @@ class GroupDocument(models.Model):
             return os.path.join('Projectos', self.group.project.name, group, filename)
 
     group = models.ForeignKey(DocumentGroup,
+                              on_delete=models.CASCADE,
+                              related_name='documents')
+
+    file = models.FileField(upload_to=get_upload_folder, null=True, blank=True, max_length=256)
+    date = models.DateField(default=datetime.date.today)
+
+    def __str__(self):
+        return self.group.name + '_' + str(
+            self.date) if self.group.dtype == 'other' else self.group.get_dtype_display() + '_' + str(self.date)
+
+
+class ProgramDocument(models.Model):
+
+    def get_upload_folder(self, filename):
+        return os.path.join('Programas', self.program.name, filename)
+
+    name = models.CharField(max_length=255)
+    file = models.FileField(upload_to=get_upload_folder, null=True, blank=True)
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='documents', null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class ProgramDocumentGroup(models.Model):
+    name = models.CharField(max_length=255, null=True, blank=True)
+    program = models.ForeignKey(Program,
+                                on_delete=models.CASCADE,
+                                related_name='document_groups')
+
+    DOCUMENT_TYPES = [('other', 'Otro'),
+                      ('dpac', 'Desglose del presupuesto del año en curso'),
+                      ('mca', 'Anexo 15 Modelo de certificación de actividades'),
+                      ('isp', 'Anexo 13 Informe semestral del proyecto'),
+                      ('ict', 'Informe científico técnico'),
+                      ('dapiscca', 'Dictamen de aprobación del informe semestral por el CCA'),
+                      ('dgeri', 'Dictamen del Grupo de Expertos sobre los resultados y el Informe de la Etapa'),
+                      ('mnig', 'Anexo 16 Modelo de Notificación de Ingresos/Gastos'),
+                      ('bcpr', 'Base de cálculo para el pago por remuneración'),
+                      ('acpp', 'Acta de conformidad de los participantes del proyecto'),
+                      ('cpr', 'Certificación para el pago de la remuneración'),
+                      ('cpie', 'Anexo 8. Certifico para el pago de los investigadores externos')]
+
+    dtype = models.CharField(max_length=512, choices=DOCUMENT_TYPES, default='other')
+
+    def __str__(self):
+        return self.name if self.dtype == 'other' else self.get_dtype_display()
+
+
+class ProgramGroupDocument(models.Model):
+
+    def get_upload_folder(self, filename):
+        program = self.group.program
+        group = self.group.name if self.group.dtype == 'other' else self.group.get_dtype_display()
+
+        return os.path.join('Programas', program.name, group, filename)
+
+
+    group = models.ForeignKey(ProgramDocumentGroup,
                               on_delete=models.CASCADE,
                               related_name='documents')
 

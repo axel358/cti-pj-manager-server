@@ -151,7 +151,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="%s"' % instance.file.name
 
         return response
-        
+
     def destroy(self, request, *args, **kwargs):
         document = self.get_object()
         if document.file is not None:
@@ -188,4 +188,35 @@ class DocumentGroupViewSet(viewsets.ModelViewSet):
         queryset = DocumentGroup.objects.all()
         serializer = DocumentGroupSerializer(
             queryset.filter(dtype=request.headers["Name"]).filter(project=request.headers["Project"]), many=True)
+        return Response(serializer.data)
+
+
+class ProgramDocumentViewSet(DocumentViewSet):
+    queryset = ProgramDocument.objects.all()
+    serializer_class = ProjectDocumentSerializer
+
+
+class ProgramGroupDocumentViewSet(DocumentViewSet):
+    queryset = ProgramGroupDocument.objects.all()
+    serializer_class = ProgramGroupDocumentSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        group_document = self.get_object()
+        document_group = ProgramDocumentGroup.objects.get(id=group_document.group.id)
+        if len(document_group.documents.values_list(flat=False)) == 1:
+            self.perform_destroy(group_document)
+            document_group.delete()
+        else:
+            self.perform_destroy(group_document)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ProgramDocumentGroupViewSet(viewsets.ModelViewSet):
+    queryset = ProgramDocumentGroup.objects.all()
+    serializer_class = ProgramDocumentGroupSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = ProgramDocumentGroup.objects.all()
+        serializer = ProgramDocumentGroupSerializer(
+            queryset.filter(dtype=request.headers["Name"]).filter(project=request.headers["Program"]), many=True)
         return Response(serializer.data)
