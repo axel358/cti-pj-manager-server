@@ -9,5 +9,6 @@ admin.site.register(ProgramDocument)
 admin.site.register(DocumentGroup)
 admin.site.register(GroupDocument)
 admin.site.register(Member)
-
+admin.site.register(ProgramGroupDocument)
+admin.site.register(ProgramDocumentGroup)
 

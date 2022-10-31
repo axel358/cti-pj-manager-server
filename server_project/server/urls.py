@@ -9,7 +9,8 @@ from .views import (
     LogoutAllView, UsersListView, UserDetailsView
 )
 from .viewsets import ProgramViewSet, ProjectViewSet, MembersViewSet, ProjectDocumentViewSet, MyTokenVerifyView, \
-    MyTokenObtainPairView, GroupDocumentViewSet, DocumentViewSet, DocumentGroupViewSet, ProgramDocumentViewSet, ProgramDocumentGroupViewSet, ProgramGroupDocumentViewSet
+    MyTokenObtainPairView, GroupDocumentViewSet, DocumentViewSet, DocumentGroupViewSet, ProgramDocumentViewSet, \
+    ProgramDocumentGroupViewSet, ProgramGroupDocumentViewSet
 from rest_framework_simplejwt.views import TokenRefreshView
 
 router = routers.DefaultRouter()

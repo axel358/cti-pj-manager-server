@@ -44,7 +44,6 @@ class Program(models.Model):
         return self.name
 
 
-
 class Project(models.Model):
     PROJECTS_TYPES = [
         ('papn', 'Proyectos Asociados a Programas Nacional'),
@@ -240,7 +239,6 @@ class ProgramGroupDocument(models.Model):
         group = self.group.name if self.group.dtype == 'other' else self.group.get_dtype_display()
 
         return os.path.join('Programas', program.name, group, filename)
-
 
     group = models.ForeignKey(ProgramDocumentGroup,
                               on_delete=models.CASCADE,

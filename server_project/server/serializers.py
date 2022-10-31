@@ -55,6 +55,13 @@ class ProgramDocumentSerializer(serializers.ModelSerializer):
         model = ProgramDocument
         fields = '__all__'
 
+    def validate(self, attrs):
+        if ProgramDocument.objects.filter(program=attrs['program']).filter(dtype=attrs['dtype']).exists():
+            raise serializers.ValidationError(
+                {"exist": "This document already exists "}
+            )
+        return attrs
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['file'] = instance.file.name
