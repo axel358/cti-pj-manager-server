@@ -33,6 +33,7 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['file'] = instance.file.name
+        response['path'] = 'projectdocuments/'
         response['d_name'] = instance.name if instance.dtype == 'other' else instance.get_dtype_display()
         return response
 
@@ -45,6 +46,7 @@ class DocumentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['file'] = instance.file.name
+        response['path'] = 'documents/'
         return response
 
 
@@ -56,6 +58,7 @@ class ProgramDocumentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['file'] = instance.file.name
+        response['path'] = 'programdocuments/'
         response['d_name'] = instance.name if instance.dtype == 'other' else instance.get_dtype_display()
         return response
 
@@ -67,6 +70,7 @@ class GroupDocumentSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
+        response['path'] = 'groupdocuments/'
         response['d_name'] = instance.group.name + '_' + str(
             instance.date) if instance.group.dtype == 'other' else instance.group.get_dtype_display() + '_' + str(
             instance.date)
@@ -103,6 +107,7 @@ class ProgramGroupDocumentSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
+        response['path'] = 'programgroupdocuments/'
         response['d_name'] = instance.group.name + '_' + str(
             instance.date) if instance.group.dtype == 'other' else instance.group.get_dtype_display() + '_' + str(
             instance.date)
@@ -119,7 +124,7 @@ class ProgramDocumentGroupSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         group = ProgramDocumentGroup.objects.create(
             name=validated_data["name"],
-            project=validated_data["project"],
+            program=validated_data["program"],
             dtype=validated_data["dtype"],
         )
         group.save()
@@ -163,6 +168,7 @@ class ProgramSimpleSerializer(serializers.ModelSerializer):
 
 class ProgramSerializer(serializers.ModelSerializer):
     documents = ProgramDocumentSerializer(read_only=True, many=True)
+    document_groups = ProgramDocumentGroupSerializer(read_only=True, many=True)
 
     class Meta:
         model = Program

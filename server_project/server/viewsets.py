@@ -180,6 +180,10 @@ class GroupDocumentViewSet(DocumentViewSet):
 
     def destroy(self, request, *args, **kwargs):
         group_document = self.get_object()
+
+        if group_document.file is not None:
+            group_document.file.delete()
+
         document_group = DocumentGroup.objects.get(id=group_document.group.id)
         if len(document_group.documents.values_list(flat=False)) == 1:
             self.perform_destroy(group_document)
@@ -202,7 +206,7 @@ class DocumentGroupViewSet(viewsets.ModelViewSet):
 
 class ProgramDocumentViewSet(DocumentViewSet):
     queryset = ProgramDocument.objects.all()
-    serializer_class = ProjectDocumentSerializer
+    serializer_class = ProgramDocumentSerializer
 
 
 class ProgramGroupDocumentViewSet(DocumentViewSet):
@@ -211,6 +215,10 @@ class ProgramGroupDocumentViewSet(DocumentViewSet):
 
     def destroy(self, request, *args, **kwargs):
         group_document = self.get_object()
+
+        if group_document.file is not None:
+            group_document.file.delete()
+
         document_group = ProgramDocumentGroup.objects.get(id=group_document.group.id)
         if len(document_group.documents.values_list(flat=False)) == 1:
             self.perform_destroy(group_document)
@@ -227,5 +235,5 @@ class ProgramDocumentGroupViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = ProgramDocumentGroup.objects.all()
         serializer = ProgramDocumentGroupSerializer(
-            queryset.filter(dtype=request.headers["Name"]).filter(project=request.headers["Program"]), many=True)
+            queryset.filter(dtype=request.headers["Name"]).filter(program=request.headers["Project"]), many=True)
         return Response(serializer.data)

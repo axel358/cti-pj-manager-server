@@ -20,7 +20,7 @@ router.register(r"documents", DocumentViewSet)
 router.register(r"projectdocuments", ProjectDocumentViewSet)
 router.register(r"groupdocuments", GroupDocumentViewSet)
 router.register(r"documentgroups", DocumentGroupViewSet)
-router.register(r"programdocuments", ProjectDocumentViewSet)
+router.register(r"programdocuments", ProgramDocumentViewSet)
 router.register(r"programgroupdocuments", ProgramGroupDocumentViewSet)
 router.register(r"programdocumentgroups", ProgramDocumentGroupViewSet)
 app_name = "server"
