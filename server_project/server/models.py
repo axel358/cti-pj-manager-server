@@ -49,8 +49,11 @@ class Project(models.Model):
         ('papn', 'Proyectos Asociados a Programas Nacional'),
         ('paps', 'Proyectos Asociados a Programas Sectorial'),
         ('papt', 'Proyectos Asociados a Programas Territorial'),
-        ('pnap_di', 'Proyectos No Asociados a Programas Demanda Interna'),
-        ('pnap_de', 'Proyectos No Asociados a Programas Demanda Externa')
+        ('pnap_pe', 'Proyectos No Asociados a Programas (PE)'),
+        ('pnap_pne', 'Proyectos No Asociados a Programas (PNE)'),
+        ('pnap_pdl', 'Proyectos No Asociados a Programas (PDL)'),
+        ('pnap_prci', 'Proyectos No Asociados a Programas (PRCI)'),
+        ('pnap_pi', 'Proyectos No Asociados a Programas (PI)')
 
     ]
     PROJECTS_CLASS_OPTIONS = [
@@ -123,6 +126,7 @@ class ProjectDocument(models.Model):
                       ('rsjf', 'Resolución de nombramiento del jefe de proyecto'),
                       ('cidef', 'Compatibilización con los intereses de la Defensa'),
                       ('roap', 'Resolución oficial de aprobación del proyecto'),
+                      ('dapp', 'Dictamen de aprobación del proyecto por el programa'),
                       ('dapcca', 'Dictamen de aprobación del proyecto por el CCA'),
                       ('dpddp', 'Documentos de planificación del diseño y desarrollo del producto'),
                       ('csbie', 'Certifico del salario básico de los investigadores externos'),
@@ -194,10 +198,10 @@ class ProgramDocument(models.Model):
     DOCUMENT_TYPES = [('other', 'Otro'),
                       ('profile', 'Perfil'),
                       ('contract', 'Contract'),
-                      ('rsjf', 'Resolución de nombramiento del jefe de proyecto'),
+                      ('rsjf', 'Resolución de nombramiento del equipo de dirección'),
+                      ('dap', 'Documento de aprobación del programa'),
+                      ('daeg', 'Documento de aprobación de la entidad gestora'),
                       ('cidef', 'Compatibilización con los intereses de la Defensa'),
-                      ('roap', 'Resolución oficial de aprobación del proyecto'),
-                      ('dapcca', 'Dictamen de aprobación del proyecto por el CCA'),
                       ('dpddp', 'Documentos de planificación del diseño y desarrollo del producto'),
                       ('csbie', 'Certifico del salario básico de los investigadores externos'),
                       ('fciie', 'Fotos escaneadas del carné de identidad de los investigadores')]
@@ -216,13 +220,13 @@ class ProgramDocumentGroup(models.Model):
     DOCUMENT_TYPES = [('other', 'Otro'),
                       ('dpac', 'Desglose del presupuesto del año en curso'),
                       ('mca', 'Anexo 15 Modelo de certificación de actividades'),
-                      ('isp', 'Anexo 13 Informe semestral del proyecto'),
-                      ('ict', 'Informe científico técnico'),
-                      ('dapiscca', 'Dictamen de aprobación del informe semestral por el CCA'),
-                      ('dgeri', 'Dictamen del Grupo de Expertos sobre los resultados y el Informe de la Etapa'),
-                      ('mnig', 'Anexo 16 Modelo de Notificación de Ingresos/Gastos'),
+                      ('rdlc', 'Resultados de la convocatoria'),
+                      ('rpe', 'Relación de proyectos en ejecucion'),
+                      ('arge', 'Actas de las reuniones del grupo de expertos'),
+                      ('iar', 'Informe anual de resultados del programa'),
+                      ('ifp', 'Informe final del programa'),
                       ('bcpr', 'Base de cálculo para el pago por remuneración'),
-                      ('acpp', 'Acta de conformidad de los participantes del proyecto'),
+                      ('acpp', 'Acta de conformidad de los participantes del programa'),
                       ('cpr', 'Certificación para el pago de la remuneración'),
                       ('cpie', 'Anexo 8. Certifico para el pago de los investigadores externos')]
 
