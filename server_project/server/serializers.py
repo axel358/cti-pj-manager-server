@@ -145,18 +145,16 @@ class ProgramDocumentGroupSerializer(serializers.ModelSerializer):
 
 
 class ProjectSimpleSerializer(serializers.ModelSerializer):
-    chief = serializers.SerializerMethodField()
-    project_classification = serializers.SerializerMethodField()
-
     class Meta:
         model = Project
-        fields = ['id', 'name', 'chief', 'end_date', 'project_classification', 'pj_type', 'strategics_sectors']
+        fields = ['id', 'name', 'end_date', 'pj_type', 'strategics_sectors']
 
-    def get_chief(self, obj):
-        return obj.chief.first_name + ' ' + obj.chief.last_name
-
-    def get_project_classification(self, obj):
-        return obj.get_project_classification_display()
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
+        response['project_classification'] = instance.get_pj_type_display()
+        response['financing'] = instance.financing
+        return response
 
 
 class ProgramSimpleSerializer(serializers.ModelSerializer):
