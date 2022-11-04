@@ -147,7 +147,7 @@ class ProgramDocumentGroupSerializer(serializers.ModelSerializer):
 class ProjectSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['id', 'name', 'end_date', 'pj_type', 'strategics_sectors']
+        fields = ['id', 'name', 'end_date', 'pj_type', 'strategics_sectors', 'notes']
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
