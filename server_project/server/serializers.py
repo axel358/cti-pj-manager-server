@@ -12,6 +12,20 @@ class MembersSerializer(serializers.ModelSerializer):
         model = Member
         fields = '__all__'
 
+    def validate(self, attrs):
+        if self.instance is not None:
+            if Member.objects.exclude(id=self.instance.id).filter(c_id=attrs['c_id']).exists():
+                raise serializers.ValidationError(
+                    {"exist": "This member already exists "}
+                )
+            return attrs
+        else:
+            if Member.objects.filter(c_id=attrs['c_id']).exists():
+                raise serializers.ValidationError(
+                    {"exist": "This member already exists "}
+                )
+            return attrs
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['type'] = instance.get_m_type_display()
