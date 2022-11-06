@@ -75,6 +75,7 @@ class Project(models.Model):
     end_date = models.DateField(default=datetime.date.today)
     financing = models.PositiveBigIntegerField(default=0)
     notes = models.TextField(null=True, blank=True)
+    status = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
