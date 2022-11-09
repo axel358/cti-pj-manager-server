@@ -68,7 +68,8 @@ class LogoutView(APIView):
 class LogoutAllView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request):
+
+    def post(request):
         tokens = OutstandingToken.objects.filter(user_id=request.user.id)
         for token in tokens:
             t, _ = BlacklistedToken.objects.get_or_create(token=token)
