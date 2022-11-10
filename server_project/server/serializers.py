@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenVerifySerializer, TokenObtainPairSerializer
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 
 from .models import *
 from django.contrib.auth.models import Group, Permission
@@ -456,6 +457,12 @@ class UsersListSerializer(serializers.ModelSerializer):
 
 class MyTokenVerifySerializer(TokenVerifySerializer):
     def validate(self, attrs):
+        # user = OutstandingToken.objects.filter(token=self.initial_data['ref_token']).values_list('user_id', flat=True)
+        # if not User.objects.filter(id=user[0]).exists():
+        #
+        #     raise serializers.ValidationError(
+        #         {"email": "This user is not valid."}
+        #     )
         data = super().validate(attrs)
         return data
 
@@ -473,7 +480,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["refresh"] = str(refresh)
         data["access"] = str(refresh.access_token)
         data["user"] = {"username": self.user.username}
-        data['groups'] = {self.user.groups.values_list('name', flat=True)}
+        data['groups'] = self.user.groups.values_list('name', flat=True)
         data['email'] = {"email": self.user.email}
         data['user_id'] = str(self.user.id)
 
