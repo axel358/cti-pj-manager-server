@@ -480,8 +480,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["refresh"] = str(refresh)
         data["access"] = str(refresh.access_token)
         data["user"] = {"username": self.user.username}
-        data['groups'] = self.user.groups.values_list('name', flat=True)
         data['email'] = {"email": self.user.email}
         data['user_id'] = str(self.user.id)
-
+        if self.user.is_superuser:
+            data['groups'] = ['admin']
+        else:
+            data['groups'] = self.user.groups.values_list('name', flat=True)
         return data
