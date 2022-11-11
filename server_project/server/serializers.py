@@ -162,7 +162,7 @@ class ProgramDocumentGroupSerializer(serializers.ModelSerializer):
 class ProjectSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['id', 'name', 'end_date', 'pj_type', 'strategics_sectors', 'notes', 'status']
+        fields = ['id', 'name', 'end_date', 'pj_type', 'strategics_sectors', 'notes', 'status', 'main_entity']
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
@@ -275,6 +275,11 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.members.clear()
+        if instance.notes != validated_data['notes'] and len(validated_data['notes']):
+            validated_data['status'] = 1
+        elif len(validated_data['notes']):
+            validated_data['status'] = 0
+        print(validated_data['status'])
         if instance.chief != validated_data['chief']:
             group, created = Group.objects.get_or_create(name='project_chiefs')
             is_have_more_projects = Project.objects.exclude(id=instance.id).filter(chief=instance.chief.id).exists()
