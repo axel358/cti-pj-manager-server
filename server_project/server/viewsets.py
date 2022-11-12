@@ -94,7 +94,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.request.method == "GET":
             self.permission_classes = [
-                IsAuthenticated & IsAdminUser | IsProjectChief | IsHumanResources | IsEconomyChief]
+                IsAuthenticated & IsAdminUser | IsProjectChief | IsHumanResources | IsEconomyChief | IsVicedChief]
         else:
             self.permission_classes = [IsAuthenticated & IsAdminUser | IsProjectChief]
         return super(ProjectViewSet, self).get_permissions()
