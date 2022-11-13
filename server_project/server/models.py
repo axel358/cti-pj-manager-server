@@ -123,7 +123,7 @@ class ProjectDocument(models.Model):
     file = models.FileField(upload_to=get_upload_folder, null=True, blank=True, max_length=256)
     DOCUMENT_TYPES = [('other', 'Otro'),
                       ('profile', 'Perfil'),
-                      ('contract', 'Contract'),
+                      ('contract', 'Contrato'),
                       ('rsjf', 'Resolución de nombramiento del jefe de proyecto'),
                       ('cidef', 'Compatibilización con los intereses de la Defensa'),
                       ('roap', 'Resolución oficial de aprobación del proyecto'),
@@ -198,7 +198,7 @@ class ProgramDocument(models.Model):
 
     DOCUMENT_TYPES = [('other', 'Otro'),
                       ('profile', 'Perfil'),
-                      ('contract', 'Contract'),
+                      ('contract', 'Contrato'),
                       ('rsjf', 'Resolución de nombramiento del equipo de dirección'),
                       ('dap', 'Documento de aprobación del programa'),
                       ('daeg', 'Documento de aprobación de la entidad gestora'),
