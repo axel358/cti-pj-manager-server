@@ -162,13 +162,15 @@ class ProgramDocumentGroupSerializer(serializers.ModelSerializer):
 class ProjectSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['id', 'name', 'end_date', 'pj_type', 'strategics_sectors', 'notes', 'status', 'main_entity']
+        fields = ['id', 'name', 'end_date', 'pj_type', 'strategics_sectors', 'notes', 'status', 'main_entity',
+                  'program']
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
         response['project_classification'] = instance.get_pj_type_display()
         response['financing'] = instance.financing
+        response['chief_id'] = instance.chief.id
         return response
 
 

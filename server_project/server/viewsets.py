@@ -61,7 +61,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
         queryset = Project.objects.all()
         if IsProjectChief().has_permission(self.request, self) and not IsProgramChief().has_permission(self.request,
                                                                                                        self):
-            print('jefe proyecto no programa')
             if request.headers["classification"] == 'all':
                 serializer = ProjectSimpleSerializer(
                     queryset.filter(chief=request.user.id), many=True)
@@ -73,9 +72,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
                     queryset.filter(chief=request.user.id).filter(pj_type=request.headers["classification"]), many=True)
         elif IsProgramChief().has_permission(self.request, self) and not IsProjectChief().has_permission(self.request,
                                                                                                          self):
-            print('jefe  programa puro')
             program = Program.objects.filter(chief=request.user.id)
-            print(program[0].id)
             if request.headers["classification"] == 'all':
                 serializer = ProjectSimpleSerializer(
                     queryset.filter(program=program[0].id), many=True)
@@ -87,8 +84,21 @@ class ProjectViewSet(viewsets.ModelViewSet):
                     queryset.filter(program=program[0].id).filter(pj_type=request.headers["classification"]), many=True)
         elif IsProgramChief().has_permission(self.request, self) and IsProjectChief().has_permission(self.request,
                                                                                                      self):
-            serializer = ProjectSimpleSerializer(
-                queryset, many=True)
+            if request.headers["classification"] == 'all':
+                serializer = ProjectSimpleSerializer(
+                    queryset, many=True)
+                return Response(
+                    self.getWhenBoths(serializer.data, request.user.id))
+            elif request.headers["classification"] == 'pnap':
+                serializer = ProjectSimpleSerializer(
+                    queryset.filter(program=None), many=True)
+                return Response(
+                    self.getWhenBoths(serializer.data, request.user.id))
+            else:
+                serializer = ProjectSimpleSerializer(
+                    queryset.filter(pj_type=request.headers["classification"]), many=True)
+                return Response(
+                    self.getWhenBoths(serializer.data, request.user.id))
         else:
             if request.headers["classification"] == 'all':
                 serializer = ProjectSimpleSerializer(queryset, many=True)
@@ -97,14 +107,16 @@ class ProjectViewSet(viewsets.ModelViewSet):
             else:
                 serializer = ProjectSimpleSerializer(queryset.filter(pj_type=request.headers["classification"]),
                                                      many=True)
-        print(dir(serializer.data))
         return Response(serializer.data)
 
-    # def getWhenBoths(self, classs,data,chief_id):
-    #     data1 = Project.objects.all()
-    #     program = Program.objects.filter(chief_id)
-    #     for i in data1:
-    #         if i.filter
+    def getWhenBoths(self, data, chief_id):
+        program = Program.objects.filter(chief=chief_id)
+        pp = ([])
+
+        for i in data:
+            if i['program'] == program[0].id or i['chief_id'] == chief_id:
+                pp.append(i)
+        return pp
 
     def destroy(self, request, *args, **kwargs):
         project = self.get_object()
@@ -119,7 +131,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            self.permission_classes = [IsAuthenticated & IsAdminUser | IsProjectChief | IsHumanResources | IsEconomyChief | IsVicedChief | IsProgramChief]
+            self.permission_classes = [
+                IsAuthenticated & IsAdminUser | IsProjectChief | IsHumanResources | IsEconomyChief | IsVicedChief | IsProgramChief]
         else:
             self.permission_classes = [IsAuthenticated & IsAdminUser | IsProjectChief]
         return super(ProjectViewSet, self).get_permissions()
