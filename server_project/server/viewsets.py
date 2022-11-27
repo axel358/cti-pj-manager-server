@@ -99,6 +99,18 @@ class ProjectViewSet(viewsets.ModelViewSet):
                     queryset.filter(pj_type=request.headers["classification"]), many=True)
                 return Response(
                     self.getWhenBoths(serializer.data, request.user.id))
+        elif IsVicedChief().has_permission(self.request, self):
+            print(request.headers)
+            if request.headers["classification"] == 'all':
+                serializer = ProjectSimpleSerializer(
+                    queryset.filter(main_entity=request.headers["faculty"]), many=True)
+            elif request.headers["classification"] == 'pnap':
+                serializer = ProjectSimpleSerializer(
+                    queryset.filter(main_entity=request.headers["faculty"]).filter(program=None), many=True)
+            else:
+                serializer = ProjectSimpleSerializer(
+                    queryset.filter(main_entity=request.headers["faculty"]).filter(
+                        pj_type=request.headers["classification"]), many=True)
         else:
             if request.headers["classification"] == 'all':
                 serializer = ProjectSimpleSerializer(queryset, many=True)

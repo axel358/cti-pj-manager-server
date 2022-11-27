@@ -164,5 +164,6 @@ CORS_ALLOW_HEADERS = [
     "name",
     "project",
     "classification",
-    "program-classification"
+    "program-classification",
+    "faculty",
 ]

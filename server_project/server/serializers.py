@@ -489,6 +489,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["user"] = {"username": self.user.username}
         data['email'] = {"email": self.user.email}
         data['user_id'] = str(self.user.id)
+        if not self.user.is_superuser:
+            data['faculty'] = str(Chief.objects.filter(username=self.user.username)[0].faculty)
+        else:
+            data['faculty'] = str('')
         if self.user.is_superuser:
             data['groups'] = ['admin']
         else:
