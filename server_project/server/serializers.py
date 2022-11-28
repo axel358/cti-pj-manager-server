@@ -162,13 +162,15 @@ class ProgramDocumentGroupSerializer(serializers.ModelSerializer):
 class ProjectSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['id', 'name', 'end_date', 'pj_type', 'strategics_sectors', 'notes', 'status', 'main_entity']
+        fields = ['id', 'name', 'end_date', 'pj_type', 'strategics_sectors', 'notes', 'status', 'main_entity',
+                  'program']
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['chief'] = instance.chief.first_name + ' ' + instance.chief.last_name
         response['project_classification'] = instance.get_pj_type_display()
         response['financing'] = instance.financing
+        response['chief_id'] = instance.chief.id
         return response
 
 
@@ -329,6 +331,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             "email",
             "chief_type",
             "c_id",
+            "faculty",
         )
         extra_kwargs = {
             "username": {"required": True},
@@ -339,6 +342,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             "email": {"required": True},
             "chief_type": {"required": True},
             "c_id": {"required": False},
+            "faculty": {"required": False},
         }
 
     def validate(self, attrs):
@@ -349,6 +353,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return attrs
 
+    def validate_c_id(self, value):
+        if value != "":
+            if Chief.objects.filter(c_id=value).exists():
+                raise serializers.ValidationError("This user already exists.")
+        return value
+
     def create(self, validated_data):
         user = Chief.objects.create(
             username=validated_data["username"],
@@ -357,6 +367,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data["email"],
             chief_type=validated_data["chief_type"],
             c_id=validated_data["c_id"],
+            faculty=validated_data["faculty"],
         )
         user.set_password(validated_data["password"])
         if user.chief_type != 'project_program_both_chief':
@@ -404,6 +415,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             "email",
             "chief_type",
             "c_id",
+            "faculty",
         )
         extra_kwargs = {
             "username": {"required": True},
@@ -412,21 +424,24 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             "email": {"required": True},
             "chief_type": {"required": True},
             "c_id": {"required": False},
+            "faculty": {"required": False},
 
         }
 
     def validate_username(self, value):
         if Chief.objects.exclude(id=self.instance.id).filter(username=value).exists():
-            raise serializers.ValidationError(
-                {"username": "This username is already in use."}
-            )
+            raise serializers.ValidationError("This username is already in use.")
+        return value
+
+    def validate_c_id(self, value):
+        if value != "":
+            if Chief.objects.exclude(id=self.instance.id).filter(c_id=value).exists():
+                raise serializers.ValidationError("This user already exists.")
         return value
 
     def validate_email(self, value):
         if Chief.objects.exclude(id=self.instance.id).filter(email=value).exists():
-            raise serializers.ValidationError(
-                {"email": "This email is already in use."}
-            )
+            raise serializers.ValidationError("This email is already in use.")
         return value
 
     def update(self, instance, validated_data):
@@ -437,6 +452,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.email = validated_data["email"]
         instance.chief_type = validated_data["chief_type"]
         instance.c_id = validated_data["c_id"]
+        instance.faculty = validated_data["faculty"]
 
         instance.save()
         if instance.chief_type != 'project_program_both_chief':
@@ -486,6 +502,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["user"] = {"username": self.user.username}
         data['email'] = {"email": self.user.email}
         data['user_id'] = str(self.user.id)
+        if not self.user.is_superuser:
+            data['faculty'] = str(Chief.objects.filter(username=self.user.username)[0].faculty)
+        else:
+            data['faculty'] = str('')
         if self.user.is_superuser:
             data['groups'] = ['admin']
         else:
