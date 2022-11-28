@@ -61,7 +61,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
         queryset = Project.objects.all()
         if IsProjectChief().has_permission(self.request, self) and not IsProgramChief().has_permission(self.request,
                                                                                                        self):
-            print('jefe proyecto no programa')
             if request.headers["classification"] == 'all':
                 serializer = ProjectSimpleSerializer(
                     queryset.filter(chief=request.user.id), many=True)
@@ -73,9 +72,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
                     queryset.filter(chief=request.user.id).filter(pj_type=request.headers["classification"]), many=True)
         elif IsProgramChief().has_permission(self.request, self) and not IsProjectChief().has_permission(self.request,
                                                                                                          self):
-            print('jefe  programa puro')
             program = Program.objects.filter(chief=request.user.id)
-            print(program[0].id)
             if request.headers["classification"] == 'all':
                 serializer = ProjectSimpleSerializer(
                     queryset.filter(program=program[0].id), many=True)
@@ -97,7 +94,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
             else:
                 serializer = ProjectSimpleSerializer(queryset.filter(pj_type=request.headers["classification"]),
                                                      many=True)
-        print(dir(serializer.data))
         return Response(serializer.data)
 
     # def getWhenBoths(self, classs,data,chief_id):
